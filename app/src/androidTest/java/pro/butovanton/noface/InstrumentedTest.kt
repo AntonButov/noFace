@@ -1,10 +1,12 @@
 package pro.butovanton.noface
 
+import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import io.reactivex.rxjava3.internal.jdk8.FlowableFlatMapStream.subscribe
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -58,7 +60,7 @@ class InstrumentedTest {
      @Test
     fun saveRoom() {
         var count = CountDownLatch(1)
-        var user = User(3, 42)
+        var user = User(3, 0)
         var room = Room(repo.getKey(), user)
 
         repo.saveRoom(room)
@@ -88,29 +90,16 @@ class InstrumentedTest {
 
     @Test
     fun getRoomChield() {
+
         var count = CountDownLatch(1)
-        var listener =  object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-               val room =  snapshot.getValue(Room::class.java)
-            //    Room()
+        var d = repo.getRooms()
+            .filter { it.user1.age == 0 }
+            .subscribe{
+                Log.d("DEBUG", it.key.toString())
             }
 
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
-              }
-
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-            }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-
-        }
-        repo.ref.addChildEventListener(listener)
         count.await(1, TimeUnit.MINUTES)
+        d.dispose()
     }
 
  }

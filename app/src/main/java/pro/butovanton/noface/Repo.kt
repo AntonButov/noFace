@@ -1,7 +1,13 @@
 package pro.butovanton.noface
 
 import com.google.android.gms.tasks.Task
+import com.google.firebase.database.ChildEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.Flowables
 import pro.butovanton.noface.Models.Room
 
 class Repo(var ref : DatabaseReference) {
@@ -18,8 +24,30 @@ class Repo(var ref : DatabaseReference) {
             .key
     }
 
-   fun getRooms() {
-    var room = Room()
+   fun getRooms() : Observable<Room> {
+       return Observable.create { o ->
+           var listener = object : ChildEventListener {
+               override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                   val room = snapshot.getValue(Room::class.java)
+                   o.onNext(room)
+               }
+
+               override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+
+               }
+
+               override fun onChildRemoved(snapshot: DataSnapshot) {
+               }
+
+               override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+               }
+
+               override fun onCancelled(error: DatabaseError) {
+               }
+
+           }
+           ref.addChildEventListener(listener)
+       }
    }
 
 }

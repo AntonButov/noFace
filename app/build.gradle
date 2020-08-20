@@ -59,4 +59,6 @@ dependencies {
     //DEX
     implementation 'com.android.support:multidex:1.0.3'
 
+    //Rx
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.0")
 }
