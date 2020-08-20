@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1039576554057",
+    "firebase_url": "https://noface-46e7c.firebaseio.com",
+    "project_id": "noface-46e7c",
+    "storage_bucket": "noface-46e7c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1039576554057:android:4fb1172be231962a3b7d98",
+        "android_client_info": {
+          "package_name": "pro.butovanton.noface"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1039576554057-jf479ciocffjv1j4i6fnaoh23ane9h7l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLDkd0h6iXF0eXW1mvp9dkAbh0MnqRGLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1039576554057-jf479ciocffjv1j4i6fnaoh23ane9h7l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
