@@ -1,6 +1,5 @@
-package pro.butovanton.noface
+package pro.butovanton.noface.Activitys
 
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import androidx.activity.viewModels
@@ -15,20 +14,17 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.database.DatabaseReference
+import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.MainViewModel
-import pro.butovanton.noface.viewmodels.MainViewModelFactory
-import javax.inject.Inject as Inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 
+
     private val model: MainViewModel by viewModels {
-        MainViewModelFactory((App).appcomponent.getRepo())
+        (App).appcomponent.getMainViewModelFactory()
     }
 
 
@@ -49,7 +45,8 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow), drawerLayout)
+            R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+        ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 

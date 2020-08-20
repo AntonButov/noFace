@@ -6,17 +6,179 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/age1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ваш возраст" />
+
+            <Button
+                android:id="@+id/until18_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="До 18" />
+
+            <Button
+                android:id="@+id/b18_21_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="От 18 до 21" />
+
+            <Button
+                android:id="@+id/b21_25_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="От 22 до 25" />
+
+            <Button
+                android:id="@+id/b26_35_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="От 26 до 35" />
+
+            <Button
+                android:id="@+id/b35_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Старше 35" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/age2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Возраст собеседника" />
+
+            <Button
+                android:id="@+id/until18_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="До 18" />
+
+            <Button
+                android:id="@+id/b18_21_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="От 18 до 21" />
+
+            <Button
+                android:id="@+id/b21_25_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="От 22 до 25" />
+
+            <Button
+                android:id="@+id/b26_35_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="От 26 до 35" />
+
+            <Button
+                android:id="@+id/b35_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Старше 35" />
+
+            <TextView
+                android:id="@+id/mabe"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Можно несколько" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/gender1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ваш пол" />
+
+            <Button
+                android:id="@+id/Man1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Мужской" />
+
+            <Button
+                android:id="@+id/FeMale1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Женский" />
+
+            <Button
+                android:id="@+id/anyGender1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Любой" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/gender2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Пол собеседника" />
+
+            <Button
+                android:id="@+id/man"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Мужской" />
+
+            <Button
+                android:id="@+id/feMale"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Женский" />
+
+            <Button
+                android:id="@+id/anyGender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Любой" />
+        </LinearLayout>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

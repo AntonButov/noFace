@@ -41,22 +41,6 @@ class InstrumentedTest {
     repo = testAppomponent.getRepo()
     }
 
-    @Test
-    fun initMyRef() {
-        var count = CountDownLatch(1)
-        val listener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                assertTrue(dataSnapshot.value != null)
-                count.countDown()
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-            }
-        }
-        repo.ref.child("chatrooms").addListenerForSingleValueEvent(listener)
-        count.await()
-    }
-
      @Test
     fun saveRoom() {
         var count = CountDownLatch(1)
@@ -86,6 +70,7 @@ class InstrumentedTest {
        }
     repo.ref.addValueEventListener(listener)
     count.await(1, TimeUnit.MINUTES)
+    repo.ref.removeEventListener(listener)
     }
 
     @Test
@@ -95,9 +80,8 @@ class InstrumentedTest {
         var d = repo.getRooms()
             .filter { it.user1.age == 0 }
             .subscribe{
-                Log.d("DEBUG", it.key.toString())
+                Log.d("room", it.key.toString())
             }
-
         count.await(1, TimeUnit.MINUTES)
         d.dispose()
     }
