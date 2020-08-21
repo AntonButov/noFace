@@ -145,21 +145,19 @@
                 android:id="@+id/man1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/whiteGray"
+
                 android:text="Мужской" />
 
             <Button
                 android:id="@+id/feMale1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/whiteGray"
                 android:text="Женский" />
 
             <Button
                 android:id="@+id/anyGender1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/whiteGray"
                 android:text="Любой" />
         </LinearLayout>
 
@@ -180,21 +178,18 @@
                 android:id="@+id/man2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/whiteGray"
                 android:text="Мужской" />
 
             <Button
                 android:id="@+id/feMale2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/whiteGray"
                 android:text="Женский" />
 
             <Button
                 android:id="@+id/anyGender2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/whiteGray"
                 android:text="Любой" />
         </LinearLayout>
     </LinearLayout>
