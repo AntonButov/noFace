@@ -7,11 +7,12 @@ class Room() {
 
              var key : String? = null
     lateinit var user1 : User
-             var user2 : User? = null
+             var userApp : UserApp? = null
 
-    constructor(key: String?, user1: User) : this () {
+    constructor(key: String?, user1: User, user2 : UserApp) : this () {
         this.key = key
         this.user1 = user1
+        this.userApp = user2
     }
 }
 

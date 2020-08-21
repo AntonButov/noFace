@@ -15,6 +15,7 @@ import org.junit.Assert.*
 import org.junit.Before
 import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
+import pro.butovanton.noface.Models.UserApp
 import pro.butovanton.noface.di.AppComponent
 import pro.butovanton.noface.di.AppModule
 import pro.butovanton.noface.di.DaggerAppComponent
@@ -44,8 +45,9 @@ class InstrumentedTest {
      @Test
     fun saveRoom() {
         var count = CountDownLatch(1)
-        var user = User(3, 0)
-        var room = Room(repo.getKey(), user)
+        var user1 = User(3, 0)
+        var userApp = UserApp()
+        var room = Room(repo.getKey(), user1,userApp)
 
         repo.saveRoom(room)
             .addOnCompleteListener{

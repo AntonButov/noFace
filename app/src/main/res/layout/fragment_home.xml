@@ -193,4 +193,27 @@
                 android:text="Любой" />
         </LinearLayout>
     </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:text="Начать чат"
+        android:textColor="#fff"
+        android:textSize="18dp"
+        app:layout_anchorGravity="center"
+        app:layout_constraintBottom_toBottomOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="@+id/fab"
+        app:layout_constraintStart_toStartOf="@+id/fab"
+        app:layout_constraintTop_toTopOf="@+id/fab" />
 </androidx.constraintlayout.widget.ConstraintLayout>

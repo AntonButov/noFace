@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
@@ -72,26 +74,33 @@ class HomeFragment : Fragment() {
         }
 
         bMan2.setOnClickListener {
-            model.user2.gender = 0
+            model.userApp.gender = 0
             it.setBackgroundResource(R.color.colorPrimary)
             bFeMale2.setBackgroundResource(R.color.whiteGray)
             bAnyGender2.setBackgroundResource(R.color.whiteGray)
         }
         bFeMale2.setOnClickListener {
-            model.user2.gender = 1
+            model.userApp.gender = 1
             bMan2.setBackgroundResource(R.color.whiteGray)
             it.setBackgroundResource(R.color.colorPrimary)
             bAnyGender2.setBackgroundResource(R.color.whiteGray)
 
         }
         bAnyGender2.setOnClickListener {
-            model.user2.gender = 2
+            model.userApp.gender = 2
             bMan2.setBackgroundResource(R.color.whiteGray)
             bFeMale2.setBackgroundResource(R.color.whiteGray)
             bAnyGender2.setBackgroundResource(R.color.colorPrimary)
         }
         performClickGender1()
         performClickGender2()
+
+        val fab: FloatingActionButton = root.findViewById(R.id.fab)
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
+
       return root
     }
 
@@ -111,7 +120,7 @@ class HomeFragment : Fragment() {
     }
 
     fun performClickGender2() {
-        when (model.user2.gender) {
+        when (model.userApp.gender) {
             0 -> bMan2.performClick()
             1 -> bFeMale2.performClick()
             2 -> bAnyGender2.performClick()
