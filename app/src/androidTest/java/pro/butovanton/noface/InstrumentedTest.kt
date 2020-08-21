@@ -75,15 +75,16 @@ class InstrumentedTest {
 
     @Test
     fun getRoomChield() {
-
         var count = CountDownLatch(1)
         var d = repo.getRooms()
             .filter { it.user1.age == 0 }
             .subscribe{
                 Log.d("room", it.key.toString())
+
+                count.countDown()
             }
-        count.await(1, TimeUnit.MINUTES)
-        d.dispose()
+    //   if (count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
+   //     d.dispose()
     }
 
  }

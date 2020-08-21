@@ -7,7 +7,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import io.reactivex.rxjava3.core.Observable
 import pro.butovanton.noface.Models.Room
+import javax.inject.Singleton
 
+@Singleton
 class Repo(var ref : DatabaseReference) {
 
     fun saveRoom( room : Room) : Task<Void> {

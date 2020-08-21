@@ -2,6 +2,7 @@ package pro.butovanton.noface.Activitys
 
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Button
 import androidx.activity.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -14,18 +15,16 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.MainViewModel
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-
-
-    private val model: MainViewModel by viewModels {
-        (App).appcomponent.getMainViewModelFactory()
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
