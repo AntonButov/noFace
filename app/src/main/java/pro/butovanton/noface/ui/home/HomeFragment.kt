@@ -1,23 +1,26 @@
 package pro.butovanton.noface.ui.home
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_home.*
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.MainViewModel
+import java.util.*
+import java.util.concurrent.TimeUnit
+
 
 class HomeFragment : Fragment() {
 
@@ -32,6 +35,7 @@ class HomeFragment : Fragment() {
         (App).appcomponent.getMainViewModelFactory()
     }
 
+    @SuppressLint("RestrictedApi")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -97,14 +101,30 @@ class HomeFragment : Fragment() {
 
         val fab: FloatingActionButton = root.findViewById(R.id.fab)
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            val progressDialog = ProgressDialog(view.context)
+            progressDialog.setMessage("Поиск чата")
+             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+            progressDialog.show()
+            progressDialog.max = 100
+
+            Observable
+                .intervalRange(1,100,1,1,TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    progressDialog.incrementProgressBy(1)
+                }
+
+            model.startSearching()
         }
+
+
+
 
       return root
     }
 
-    fun setEnabled(enab : Boolean) {
+    fun setEnabled(enab: Boolean) {
         bMan2.isEnabled = enab
         bFeMale2.isEnabled = enab
         bAnyGender2.isEnabled = enab

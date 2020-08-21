@@ -10,5 +10,8 @@ class MainViewModel(val repo : Repo) : ViewModel() {
     var user1 = User()
     var userApp = UserApp()
 
+    fun startSearching() {
+
+    }
 
 }
