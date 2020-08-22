@@ -7,6 +7,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import io.reactivex.rxjava3.internal.jdk8.FlowableFlatMapStream.subscribe
+import io.reactivex.rxjava3.kotlin.subscribeBy
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,16 +23,12 @@ import pro.butovanton.noface.di.DaggerAppComponent
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-/**
- * Instrumented test, which will execute on an Android device.
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
 @RunWith(AndroidJUnit4::class)
 class InstrumentedTest {
 
     lateinit var testAppomponent: AppComponent
     lateinit var repo : Repo
+    lateinit var repoCopy : Repo
 
     @Before
     fun init() {
@@ -40,14 +37,15 @@ class InstrumentedTest {
             .appModule(AppModule())
             .build()
     repo = testAppomponent.getRepo()
+    repoCopy = testAppomponent.getRepo()
     }
 
      @Test
     fun saveRoom() {
         var count = CountDownLatch(1)
-        var user1 = User(3, 0)
+        var user = User(3, 0)
         var userApp = UserApp()
-        var room = Room(repo.getKey(), user1,userApp)
+        var room = Room(repo.getKey(), user,userApp)
 
         repo.saveRoom(room)
             .addOnCompleteListener{
@@ -80,13 +78,17 @@ class InstrumentedTest {
         var count = CountDownLatch(1)
         var d = repo.getRooms()
             .filter { it.user1.age == 0 }
-            .subscribe{
-                Log.d("room", it.key.toString())
-
-                count.countDown()
-            }
-    //   if (count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
-   //     d.dispose()
+            .subscribeBy ({  assertTrue(false)
+                } ,
+                {
+                    count.countDown()
+                }    ,
+                {
+                Log.d("DEBUG", "room " + it.key)
+                }
+            )
+       if (!count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
+        d.dispose()
     }
 
  }

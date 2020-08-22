@@ -7,11 +7,22 @@ import pro.butovanton.noface.Repo
 
 class MainViewModel(val repo : Repo) : ViewModel() {
 
-    var user1 = User()
+    var user = User()
     var userApp = UserApp()
 
     fun startSearching() {
 
+        repo.getRooms()
+            .filter { filterByGender(it.user1.gender) }
+            .subscribe {
+
+            }
+
+
     }
 
-}
+    fun filterByGender(gender : Int) : Boolean {
+        if (user.gender == 2) return true
+        return userApp.gender == gender
+    }
+ }

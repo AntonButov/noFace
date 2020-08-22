@@ -8,6 +8,7 @@ import dagger.Provides
 import pro.butovanton.noface.Repo
 import pro.butovanton.noface.viewmodels.MainViewModel
 import pro.butovanton.noface.viewmodels.MainViewModelFactory
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Module
@@ -17,8 +18,8 @@ class AppModule {
     fun provideMainViewModelFactory() : MainViewModelFactory {
         return MainViewModelFactory(provideRepo())
     }
-
-    @Provides
+    @Singleton
+    @Provides @Inject
     fun provideRepo() : Repo {
         return Repo(myRef())
     }

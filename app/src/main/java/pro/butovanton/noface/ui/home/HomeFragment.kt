@@ -50,14 +50,14 @@ class HomeFragment : Fragment() {
         bAnyGender2 = root.findViewById(R.id.anyGender2)
 
         bMan1.setOnClickListener {
-            model.user1.gender = 0
+            model.user.gender = 0
             it.setBackgroundResource(R.color.colorPrimary)
             bFeMale1.setBackgroundResource(R.color.whiteGray)
             bAnyGender1.setBackgroundResource(R.color.whiteGray)
             setEnabled(true)
         }
         bFeMale1.setOnClickListener {
-            model.user1.gender = 1
+            model.user.gender = 1
             bMan1.setBackgroundResource(R.color.whiteGray)
             it.setBackgroundResource(R.color.colorPrimary)
             bAnyGender1.setBackgroundResource(R.color.whiteGray)
@@ -65,7 +65,7 @@ class HomeFragment : Fragment() {
 
         }
         bAnyGender1.setOnClickListener {
-            model.user1.gender = 2
+            model.user.gender = 2
             bMan1.setBackgroundResource(R.color.whiteGray)
             bFeMale1.setBackgroundResource(R.color.whiteGray)
             it.setBackgroundResource(R.color.colorPrimary)
@@ -132,7 +132,7 @@ class HomeFragment : Fragment() {
     }
 
     fun performClickGender1() {
-        when (model.user1.gender) {
+        when (model.user.gender) {
             0 -> bMan1.performClick()
             1 -> bFeMale1.performClick()
             2 -> bAnyGender1.performClick()

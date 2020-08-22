@@ -1,10 +1,7 @@
 package pro.butovanton.noface
 
 import com.google.android.gms.tasks.Task
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.*
 import io.reactivex.rxjava3.core.Observable
 import pro.butovanton.noface.Models.Room
 import javax.inject.Singleton
@@ -24,29 +21,22 @@ class Repo(var ref : DatabaseReference) {
             .key
     }
 
-   fun getRooms() : Observable<Room> {
-       return Observable.create { o ->
-           var listener = object : ChildEventListener {
-               override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                   val room = snapshot.getValue(Room::class.java)
-                   o.onNext(room)
+    //val room = snapshot.getValue(Room::class.java)
+   // it.onNext(room)
+
+    fun getRooms() : Observable<Room> {
+       return Observable.create {
+           var listener = object : ValueEventListener {
+               override fun onDataChange(snapshot: DataSnapshot) {
+                     for ( dt in snapshot.children)
+                           it.onNext(dt.getValue(Room::class.java))
+                     it.onComplete()
                }
-
-               override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
-               }
-
-               override fun onChildRemoved(snapshot: DataSnapshot) {
-               }
-
-               override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-               }
-
                override fun onCancelled(error: DatabaseError) {
+                  it.onError(Throwable("FireBase not loaded"))
                }
-
            }
-           ref.addChildEventListener(listener)
+           ref.addValueEventListener(listener)
        }
    }
 
