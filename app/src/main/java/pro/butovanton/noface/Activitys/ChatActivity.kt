@@ -1,12 +1,15 @@
 package pro.butovanton.noface.Activitys
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Point
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.rockerhieu.emojicon.EmojiconEditText
 import com.rockerhieu.emojicon.EmojiconGridFragment
@@ -28,10 +31,13 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         edMessage = findViewById<View>(R.id.edtMessage) as EmojiconEditText
 
         edMessage.setOnClickListener {
-            var hideEmoji = true
-            hideEmojiPopUp(hideEmoji)
-            showKeyboard(edMessage)
+          //  var hideEmoji = true
+         //   hideEmojiPopUp(hideEmoji)
+         //   showKeyboard(edMessage)
+            hideKeyboard(this)
+            
         }
+
 
         setEmojiconFragment(true)
         showEmojiPopUp(true)
@@ -46,12 +52,12 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         //setHeightOfEmojiEditText();
     }
 
-    fun hideKeyboard() {
-        val inputManager = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        inputManager.hideSoftInputFromWindow(
-            currentFocus!!.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS
-        )
+    fun hideKeyboard(activity: Activity) {
+        val view = activity.findViewById<View>(android.R.id.content)
+        if (view != null) {
+            val imm = activity.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
+        }
     }
 
     private fun setEmojiconFragment(useSystemDefault: Boolean) {
@@ -71,7 +77,7 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
             (deviceHeight / 2.5).toInt() // Setting the height of FrameLayout
         frameLayout.requestLayout()
         frameLayout.setVisibility(View.VISIBLE)
-       // hideKeyboard()
+        hideKeyboard(this)
     }
 
     fun hideEmojiPopUp(hideEmoji: Boolean) {
@@ -82,6 +88,7 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
 
     override fun onEmojiconClicked(emojicon: Emojicon?) {
         EmojiconsFragment.input(edMessage, emojicon);
+        hideKeyboard(this)
     }
 
     override fun onEmojiconBackspaceClicked(v: View?) {
@@ -89,5 +96,6 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     }
 
 }
+
 
 
