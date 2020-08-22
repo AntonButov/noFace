@@ -2,6 +2,7 @@ package pro.butovanton.noface.ui.home
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -14,7 +15,9 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import pro.butovanton.noface.Activitys.ChatActivity
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.MainViewModel
@@ -30,6 +33,7 @@ class HomeFragment : Fragment() {
     lateinit var bMan2 : Button
     lateinit var bFeMale2 : Button
     lateinit var bAnyGender2 : Button
+    lateinit var d : Disposable
 
     private val model: MainViewModel by viewModels {
         (App).appcomponent.getMainViewModelFactory()
@@ -107,12 +111,18 @@ class HomeFragment : Fragment() {
             progressDialog.show()
             progressDialog.max = 100
 
-            Observable
+           d = Observable
                 .intervalRange(1,100,1,1,TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     progressDialog.incrementProgressBy(1)
+
+                    if (it > 3) {
+                       var intent = Intent(context,ChatActivity::class.java)
+                    startActivityForResult(intent, 101 )
+                        d.dispose()
+                    }
                 }
 
             model.startSearching()

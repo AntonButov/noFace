@@ -28,7 +28,6 @@ class InstrumentedTest {
 
     lateinit var testAppomponent: AppComponent
     lateinit var repo : Repo
-    lateinit var repoCopy : Repo
 
     @Before
     fun init() {
@@ -37,7 +36,6 @@ class InstrumentedTest {
             .appModule(AppModule())
             .build()
     repo = testAppomponent.getRepo()
-    repoCopy = testAppomponent.getRepo()
     }
 
      @Test

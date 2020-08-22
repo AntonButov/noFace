@@ -19,7 +19,7 @@ class AppModule {
         return MainViewModelFactory(provideRepo())
     }
     @Singleton
-    @Provides @Inject
+    @Provides
     fun provideRepo() : Repo {
         return Repo(myRef())
     }
