@@ -67,22 +67,7 @@
                 </LinearLayout>
             </ScrollView>
 
-            <androidx.emoji.widget.EmojiAppCompatEditText
-                android:id="@+id/emoji_edit_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
 
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_menu_slideshow" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

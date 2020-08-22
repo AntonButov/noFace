@@ -118,7 +118,7 @@ class HomeFragment : Fragment() {
                 .subscribe {
                     progressDialog.incrementProgressBy(1)
 
-                    if (it > 3) {
+                    if (it > 1) {
                        var intent = Intent(context,ChatActivity::class.java)
                     startActivityForResult(intent, 101 )
                         d.dispose()
