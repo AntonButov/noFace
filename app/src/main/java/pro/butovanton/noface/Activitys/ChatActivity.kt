@@ -3,33 +3,31 @@ package pro.butovanton.noface.Activitys
 import android.content.Context
 import android.graphics.Point
 import android.os.Bundle
-import android.view.KeyEvent
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.rockerhieu.emojicon.EmojiconEditText
 import com.rockerhieu.emojicon.EmojiconGridFragment
 import com.rockerhieu.emojicon.EmojiconsFragment
 import com.rockerhieu.emojicon.emoji.Emojicon
 import kotlinx.android.synthetic.main.activity_chat.*
 import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.R
+import java.sql.Time
+import java.util.*
 
 
-class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener,
-      View.OnKeyListener {
+class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
 
     lateinit var edMessage: EditText
     var imogi = false
     var messages = mutableListOf<Massage>()
-    private lateinit var recicler: RecyclerView
-    private var adapter = AdapterChatRecicler(messages)
+    private lateinit var recycler: RecyclerView
+    private lateinit var adapterChat : RecyclerAdapterChat
+    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,29 +40,40 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
             //  Нужно передовать вводит сообщение
         }
 
-        edMessage.setOnKeyListener(this)
-
         imogiButton.setOnClickListener {
             imogi = !imogi
             if (imogi) {
                 imogiButton.setBackgroundResource(R.drawable.keyboard)
-//                hideKeyboard()
                 showEmojiPopUp()
             }
             else {
                 imogiButton.setBackgroundResource(R.drawable.imogi)
                 hideEmojiPopUp()
-                //       showKeyboard(edMessage)
             }
         }
 
         sendButton.setOnClickListener {
+            var message = Massage(Date().time,edMessage.text.toString())
+            adapterChat.messages.add(message)
+            adapterChat.notifyDataSetChanged()
+
             test.text = edMessage.text
+
             edMessage.text.clear()
         }
         setEmojiconFragment(true)
-      //  hideKeyboard()
+
+        viewManager = LinearLayoutManager(this)
+
+        adapterChat = RecyclerAdapterChat(messages)
+
+        recyclerView.apply {
+            layoutManager = viewManager
+           adapter = adapterChat
+
+        }
     }
+
 
     fun showKeyboard(editText: EditText?) {
         val imm: InputMethodManager =
@@ -91,7 +100,6 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         val size = Point()
         display.getSize(size)
         var deviceHeight = size.y
-        //    Log.e("Device Height", String.valueOf(deviceHeight))
         var frameLayout = findViewById<View>(R.id.emojicons) as FrameLayout
         frameLayout.getLayoutParams().height =
             (deviceHeight / 4).toInt() // Setting the height of FrameLayout
@@ -112,11 +120,6 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     override fun onEmojiconBackspaceClicked(v: View?) {
         EmojiconsFragment.backspace(edMessage);
     }
-
-    override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
-        return false
-    }
-
 
 }
 
