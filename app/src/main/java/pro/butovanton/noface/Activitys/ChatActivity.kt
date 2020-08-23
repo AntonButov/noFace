@@ -3,38 +3,49 @@ package pro.butovanton.noface.Activitys
 import android.content.Context
 import android.graphics.Point
 import android.os.Bundle
-import android.os.Message
+import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.TextView.OnEditorActionListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import com.rockerhieu.emojicon.EmojiconEditText
 import com.rockerhieu.emojicon.EmojiconGridFragment
 import com.rockerhieu.emojicon.EmojiconsFragment
 import com.rockerhieu.emojicon.emoji.Emojicon
 import kotlinx.android.synthetic.main.activity_chat.*
+import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.R
 
 
-class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
+class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener,
+      View.OnKeyListener {
 
-    lateinit var edMessage: EmojiconEditText
+    lateinit var edMessage: EditText
     var imogi = false
-    var messages = mutableListOf<Message>()
+    var messages = mutableListOf<Massage>()
+    private lateinit var recicler: RecyclerView
+    private var adapter = AdapterChatRecicler(messages)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
         setSupportActionBar(findViewById(R.id.toolbar))
         // On clicking the edit text Emoji panel will be hidden
-        edMessage = findViewById<View>(R.id.edtMessage) as EmojiconEditText
+        edMessage = findViewById<View>(R.id.editText) as EditText
 
         edMessage.setOnClickListener {
-          //  Нужно передовать вводит сообщение
+            //  Нужно передовать вводит сообщение
         }
 
+        edMessage.setOnKeyListener(this)
+
         imogiButton.setOnClickListener {
+            imogi = !imogi
             if (imogi) {
                 imogiButton.setBackgroundResource(R.drawable.keyboard)
 //                hideKeyboard()
@@ -43,13 +54,13 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
             else {
                 imogiButton.setBackgroundResource(R.drawable.imogi)
                 hideEmojiPopUp()
-         //       showKeyboard(edMessage)
+                //       showKeyboard(edMessage)
             }
-        imogi = !imogi
         }
 
         sendButton.setOnClickListener {
-            edit.text = edMessage.text
+            test.text = edMessage.text
+            edMessage.text.clear()
         }
         setEmojiconFragment(true)
       //  hideKeyboard()
@@ -102,7 +113,11 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         EmojiconsFragment.backspace(edMessage);
     }
 
-}
+    override fun onKey(v: View?, keyCode: Int, event: KeyEvent?): Boolean {
+        return false
+    }
 
+
+}
 
 

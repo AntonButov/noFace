@@ -19,6 +19,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/imogi"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/emojicons"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewEditmessage"
@@ -30,7 +31,6 @@
             android:layout_height="50dp"
             app:layout_constraintBottom_toTopOf="@+id/emojicons"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewEditmessage"
             app:srcCompat="@drawable/send" />
 
         <com.google.android.material.appbar.AppBarLayout
@@ -51,16 +51,11 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.rockerhieu.emojicon.EmojiconEditText
-            android:id="@+id/edtMessage"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_gravity="bottom"
-            android:layout_weight=".10"
-            android:background="#FFFFFF"
+        <EditText
 
-            android:drawablePadding="@dimen/fab_margin"
-            android:hint="Введите сообщение ..."
+            android:id="@+id/editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:paddingLeft="@dimen/fab_margin"
             android:paddingTop="@dimen/fab_margin"
             android:paddingRight="@dimen/fab_margin"
@@ -84,18 +79,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" Вводит сообщение"
-            app:layout_constraintBottom_toTopOf="@+id/edtMessage"
+            app:layout_constraintBottom_toTopOf="@+id/editText"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.rockerhieu.emojicon.EmojiconTextView
+        <TextView
 
-            android:id="@+id/edit"
+            android:id="@+id/test"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/edtMessage"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintBottom_toTopOf="@+id/editText"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/textViewEditmessage"
