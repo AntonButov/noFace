@@ -122,6 +122,7 @@ class HomeFragment : Fragment() {
                        var intent = Intent(context,ChatActivity::class.java)
                     startActivityForResult(intent, 101 )
                         d.dispose()
+                        progressDialog.hide()
                     }
                 }
 
