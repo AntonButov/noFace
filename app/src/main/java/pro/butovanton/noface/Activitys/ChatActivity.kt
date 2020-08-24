@@ -56,16 +56,14 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
             var message = Massage(Date().time,edMessage.text.toString())
             adapterChat.messages.add(message)
             adapterChat.notifyDataSetChanged()
-
-            test.text = edMessage.text
-
             edMessage.text.clear()
         }
         setEmojiconFragment(true)
 
-        viewManager = LinearLayoutManager(this)
+        viewManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
 
         adapterChat = RecyclerAdapterChat(messages)
+
 
         recyclerView.apply {
             layoutManager = viewManager
