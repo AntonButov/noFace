@@ -41,7 +41,7 @@ class InstrumentedTest {
      @Test
     fun saveRoom() {
         var count = CountDownLatch(1)
-        var user = User(3, 0)
+        var user = User(2, 0)
         var userApp = UserApp()
         var room = Room(repo.getKey(), user,userApp)
 

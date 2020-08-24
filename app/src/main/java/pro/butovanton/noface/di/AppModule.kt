@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import pro.butovanton.noface.Repo
+import pro.butovanton.noface.viewmodels.ChatViewModelFactory
 import pro.butovanton.noface.viewmodels.MainViewModel
 import pro.butovanton.noface.viewmodels.MainViewModelFactory
 import javax.inject.Inject
@@ -18,6 +19,11 @@ class AppModule {
     fun provideMainViewModelFactory() : MainViewModelFactory {
         return MainViewModelFactory(provideRepo())
     }
+    @Provides
+    fun provideChatViewModelFactory() : ChatViewModelFactory {
+        return ChatViewModelFactory(provideRepo())
+    }
+
     @Singleton
     @Provides
     fun provideRepo() : Repo {

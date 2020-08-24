@@ -7,7 +7,10 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rockerhieu.emojicon.EmojiconGridFragment
@@ -16,9 +19,9 @@ import com.rockerhieu.emojicon.emoji.Emojicon
 import kotlinx.android.synthetic.main.activity_chat.*
 import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.R
-import java.sql.Time
+import pro.butovanton.noface.di.App
+import pro.butovanton.noface.viewmodels.ChatViewModel
 import java.util.*
-
 
 class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
 
@@ -29,11 +32,17 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     private lateinit var adapterChat : RecyclerAdapterChat
     private lateinit var viewManager: RecyclerView.LayoutManager
 
+    private val model: ChatViewModel by viewModels {
+        (App).appcomponent.getChatViewModelFactory()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
         setSupportActionBar(findViewById(R.id.toolbar))
-        // On clicking the edit text Emoji panel will be hidden
+
+       model.id = intent.getStringExtra("id")
+
         edMessage = findViewById<View>(R.id.editText) as EditText
 
         edMessage.setOnClickListener {
@@ -53,8 +62,8 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         }
 
         sendButton.setOnClickListener {
-            var message = Massage(Date().time,edMessage.text.toString(), true)
-            adapterChat.messages.add(message)
+            var message = Massage(Date().time, edMessage.text.toString(), true)
+            adapterChat.messages.add(0, message)
             adapterChat.notifyDataSetChanged()
             edMessage.text.clear()
         }
@@ -67,10 +76,8 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         recyclerView.apply {
             layoutManager = viewManager
            adapter = adapterChat
-
         }
-    }
-
+}
 
     fun showKeyboard(editText: EditText?) {
         val imm: InputMethodManager =

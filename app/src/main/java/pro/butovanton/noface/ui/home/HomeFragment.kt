@@ -34,6 +34,7 @@ class HomeFragment : Fragment() {
     lateinit var bFeMale2 : Button
     lateinit var bAnyGender2 : Button
     lateinit var d : Disposable
+    lateinit var progressDialog : ProgressDialog
 
     private val model: MainViewModel by viewModels {
         (App).appcomponent.getMainViewModelFactory()
@@ -105,34 +106,35 @@ class HomeFragment : Fragment() {
 
         val fab: FloatingActionButton = root.findViewById(R.id.fab)
         fab.setOnClickListener { view ->
-            val progressDialog = ProgressDialog(view.context)
+            progressDialog = ProgressDialog(view.context)
             progressDialog.setMessage("Поиск чата")
-             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
             progressDialog.show()
             progressDialog.max = 100
 
-           d = Observable
-                .intervalRange(1,100,1,1,TimeUnit.SECONDS)
+            d = Observable
+                .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     progressDialog.incrementProgressBy(1)
+                }
 
-                    if (it > 1) {
-                       var intent = Intent(context,ChatActivity::class.java)
-                    startActivityForResult(intent, 101 )
+            model.startSearching().observe(viewLifecycleOwner, {
+                if (it == null)
+                else { // есть пустая комната
+                    if (it.equals(""))
+                    else {
+                        var intent = Intent(context, ChatActivity::class.java)
+                        intent.putExtra("id", it)
+                        startActivityForResult(intent, 101)
                         d.dispose()
                         progressDialog.hide()
                     }
                 }
-
-            model.startSearching()
+            })
         }
-
-
-
-
-      return root
+        return root
     }
 
     fun setEnabled(enab: Boolean) {
@@ -156,6 +158,12 @@ class HomeFragment : Fragment() {
             1 -> bFeMale2.performClick()
             2 -> bAnyGender2.performClick()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        model.startSearching().removeObservers(this)
+        d.dispose()
     }
 
 }
