@@ -13,8 +13,6 @@ import pro.butovanton.noface.Repo
 
 class MainViewModel(val repo: Repo) : ViewModel() {
 
-    var myRoom : Room? = null
-
     var user = User()
     var userApp = UserApp()
     lateinit var d : Disposable
@@ -28,7 +26,7 @@ class MainViewModel(val repo: Repo) : ViewModel() {
                 .subscribeBy({
 
                 }, {
-                    createRoom()
+                    repo.createRoom(user, userApp)
                     getRooms.setValue("")
                 },
                     {
@@ -49,17 +47,12 @@ class MainViewModel(val repo: Repo) : ViewModel() {
         return userApp.gender == gender
     }
 
-    fun createRoom() {
-        myRoom = Room(repo.getKey(), user, userApp)
-        repo.saveRoom(myRoom!!)
-    }
-
     fun deleteCreatingRoom() {
         TODO("Удаляем созданую комнату")
     }
 
     fun connectToRoom(room: Room) {
-         room.impty = false
+        room.impty = false
         repo.saveRoom(room)
     }
 

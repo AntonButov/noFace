@@ -15,17 +15,13 @@ class RecyclerAdapterChat(val messages: MutableList<Massage>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderItemChat {
         var view : View
-           if (messages[itemCount -1].my)
-               view = LayoutInflater.from(parent.context).inflate(
-            R.layout.item_recicler_my,
+
+         view = LayoutInflater.from(parent.context).inflate(
+            R.layout.item_recicler,
             parent,
             false
         )
-            else view = LayoutInflater.from(parent.context).inflate(
-               R.layout.item_recicler_app,
-               parent,
-               false
-           )
+
         return ViewHolderItemChat(
             view
         )
@@ -35,10 +31,26 @@ class RecyclerAdapterChat(val messages: MutableList<Massage>) :
         holder: ViewHolderItemChat,
         position: Int
     ) {
+
         holder.run {
-            text.text = messages[position].text
-            val sdf = SimpleDateFormat("HH:mm:ss")
-            time.text = sdf.format(messages[position].time)
+            if (messages[position].my) {
+                textMy.text = messages[position].text
+                val sdf = SimpleDateFormat("HH:mm:ss")
+                timeMy.text = sdf.format(messages[position].time)
+                textMy.visibility = View.VISIBLE
+                timeMy.visibility = View.VISIBLE
+                textApp.visibility = View.GONE
+                timeApp.visibility = View.GONE
+            }
+            else  {
+                textApp.text = messages[position].text
+                val sdf = SimpleDateFormat("HH:mm:ss")
+                timeApp.text = sdf.format(messages[position].time)
+                textApp.visibility = View.VISIBLE
+                timeApp.visibility = View.VISIBLE
+                textMy.visibility = View.GONE
+                timeMy.visibility = View.GONE
+            }
         }
     }
 
@@ -49,12 +61,16 @@ class RecyclerAdapterChat(val messages: MutableList<Massage>) :
 
     class ViewHolderItemChat(view: View) :
         RecyclerView.ViewHolder(view) {
-        val text: TextView
-        val time: TextView
+        val textMy: TextView
+        val timeMy: TextView
+        val textApp: TextView
+        val timeApp: TextView
 
         init {
-            text = view.findViewById(R.id.textMessage)
-            time = view.findViewById(R.id.time)
+            textMy = view.findViewById(R.id.textMessageMy)
+            timeMy = view.findViewById(R.id.timeMy)
+            textApp = view.findViewById(R.id.textMessageApp)
+            timeApp = view.findViewById(R.id.timeApp)
         }
 
     }

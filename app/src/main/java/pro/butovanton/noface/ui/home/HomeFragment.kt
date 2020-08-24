@@ -126,7 +126,7 @@ class HomeFragment : Fragment() {
                     if (it.equals(""))
                     else {
                         var intent = Intent(context, ChatActivity::class.java)
-                        intent.putExtra("id", it)
+                        intent.putExtra("keyRoom", it)
                         startActivityForResult(intent, 101)
                         d.dispose()
                         progressDialog.hide()

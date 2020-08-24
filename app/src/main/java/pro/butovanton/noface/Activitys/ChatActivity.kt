@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rockerhieu.emojicon.EmojiconGridFragment
 import com.rockerhieu.emojicon.EmojiconsFragment
 import com.rockerhieu.emojicon.emoji.Emojicon
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_chat.*
 import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.R
@@ -41,7 +42,20 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         setContentView(R.layout.activity_chat)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-       model.id = intent.getStringExtra("id")
+       model.keyRoom = intent.getStringExtra("keyRoom")
+
+       var d = model.connectToRoom()
+           .subscribeBy({}, {
+            textViewEditmessage.text = "Собеседник покинул чат "
+            // Нужно прописать выход из чата.
+           },
+               {
+                   it.my = false
+
+                   adapterChat.messages.add(0, it)
+                   adapterChat.notifyDataSetChanged()
+               })
+
 
         edMessage = findViewById<View>(R.id.editText) as EditText
 
@@ -125,6 +139,10 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         EmojiconsFragment.backspace(edMessage);
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        model.disconnectChat()
+    }
 }
 
 

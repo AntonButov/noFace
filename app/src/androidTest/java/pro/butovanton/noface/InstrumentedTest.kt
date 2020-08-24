@@ -29,6 +29,8 @@ class InstrumentedTest {
     lateinit var testAppomponent: AppComponent
     lateinit var repo : Repo
 
+    val TESTID = "testId"
+
     @Before
     fun init() {
         testAppomponent = DaggerAppComponent
@@ -43,7 +45,7 @@ class InstrumentedTest {
         var count = CountDownLatch(1)
         var user = User(2, 0)
         var userApp = UserApp()
-        var room = Room(repo.getKey(), user,userApp)
+        var room = Room(TESTID, user,userApp)
 
         repo.saveRoom(room)
             .addOnCompleteListener{
@@ -54,39 +56,36 @@ class InstrumentedTest {
     }
 
     @Test
-    fun getRoom() {
-        var count = CountDownLatch(1)
-       var listener =  object : ValueEventListener {
-           override fun onDataChange(snapshot: DataSnapshot) {
-                 count.countDown()
-           }
-
-           override fun onCancelled(error: DatabaseError) {
-               TODO("Not yet implemented")
-           }
-
-       }
-    repo.ref.addValueEventListener(listener)
-    count.await(1, TimeUnit.MINUTES)
-    repo.ref.removeEventListener(listener)
-    }
-
-    @Test
     fun getRoomChield() {
         var count = CountDownLatch(1)
         var d = repo.getRooms()
-            .filter { it.user1.age == 0 }
             .subscribeBy ({  assertTrue(false)
                 } ,
                 {
                     count.countDown()
                 }    ,
                 {
+                assertTrue(it.key.equals(TESTID))
                 Log.d("DEBUG", "room " + it.key)
                 }
             )
        if (!count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
         d.dispose()
+    }
+
+    @Test
+    fun connectToChat() {
+       var count = CountDownLatch(1)
+       var d = repo.connecToChat(TESTID)
+            .subscribeBy (
+                {},{
+                    count.countDown()
+                },{
+                    assertTrue(it.text.equals(""))
+            })
+        if (!count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
+        d.dispose()
+        repo.disConnectFromChat(TESTID)
     }
 
  }
