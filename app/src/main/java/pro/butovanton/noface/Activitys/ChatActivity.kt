@@ -64,7 +64,6 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
 
         adapterChat = RecyclerAdapterChat(messages)
 
-
         recyclerView.apply {
             layoutManager = viewManager
            adapter = adapterChat
