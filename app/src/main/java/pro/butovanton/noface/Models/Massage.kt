@@ -6,4 +6,5 @@ import com.google.firebase.database.IgnoreExtraProperties
 @IgnoreExtraProperties
 data class Massage(
     var time: Long,
-    var text: String )
+    var text: String,
+    var my: Boolean)

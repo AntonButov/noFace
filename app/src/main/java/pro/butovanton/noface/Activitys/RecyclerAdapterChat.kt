@@ -1,23 +1,31 @@
 package pro.butovanton.noface.Activitys
 
-import android.content.Context
-import android.content.res.TypedArray
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.R
+import java.text.SimpleDateFormat
 
 
 class RecyclerAdapterChat(val messages: MutableList<Massage>) :
     RecyclerView.Adapter<RecyclerAdapterChat.ViewHolderItemChat>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderItemChat {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recicler, parent, false)
+        var view : View
+           if (messages[itemCount -1].my)
+               view = LayoutInflater.from(parent.context).inflate(
+            R.layout.item_recicler_my,
+            parent,
+            false
+        )
+            else view = LayoutInflater.from(parent.context).inflate(
+               R.layout.item_recicler_app,
+               parent,
+               false
+           )
         return ViewHolderItemChat(
             view
         )
@@ -29,7 +37,8 @@ class RecyclerAdapterChat(val messages: MutableList<Massage>) :
     ) {
         holder.run {
             text.text = messages[position].text
-
+            val sdf = SimpleDateFormat("HH:mm:ss")
+            time.text = sdf.format(messages[position].time)
         }
     }
 
@@ -41,10 +50,11 @@ class RecyclerAdapterChat(val messages: MutableList<Massage>) :
     class ViewHolderItemChat(view: View) :
         RecyclerView.ViewHolder(view) {
         val text: TextView
+        val time: TextView
 
         init {
             text = view.findViewById(R.id.textMessage)
-
+            time = view.findViewById(R.id.time)
         }
 
     }

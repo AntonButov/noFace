@@ -53,7 +53,7 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         }
 
         sendButton.setOnClickListener {
-            var message = Massage(Date().time,edMessage.text.toString())
+            var message = Massage(Date().time,edMessage.text.toString(), true)
             adapterChat.messages.add(message)
             adapterChat.notifyDataSetChanged()
             edMessage.text.clear()
