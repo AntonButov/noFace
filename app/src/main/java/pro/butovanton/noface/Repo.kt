@@ -16,6 +16,9 @@ import javax.inject.Singleton
 class Repo(var ref : DatabaseReference) {
 
     var myRoom : Room? = null
+    lateinit var myRef : DatabaseReference
+    lateinit var refMessageIn : DatabaseReference
+    lateinit var refMessageOut : DatabaseReference
     var owner = false
     var listenerRooms : ValueEventListener? = null
     var listenerMessage : ValueEventListener? = null
@@ -33,6 +36,22 @@ class Repo(var ref : DatabaseReference) {
             .key
     }
 
+    fun setRoom(room : Room) {
+        myRoom = room
+        myRef = ref.child(myRoom!!.key.toString())
+    }
+
+    fun setInOut(owner : Boolean) {
+        if (owner) {
+            refMessageIn = myRef.child("message1")
+            refMessageOut = myRef.child("message2")
+        }
+        else {
+            refMessageIn = myRef.child("message2")
+            refMessageOut = myRef.child("message1")
+        }
+    }
+
     fun getRooms(user : User, userApp : UserApp) : Single<String> {
        return Single.create {
            listenerRooms = object : ValueEventListener {
@@ -40,8 +59,9 @@ class Repo(var ref : DatabaseReference) {
                      for ( dt in snapshot.children) {
                          var room = dt.getValue(Room::class.java)
                          if ( room!!.empty ) {
-                             myRoom = room
+                             setRoom(room)
                              owner = false
+                             setInOut(owner)
                              it.onSuccess("guest")
                              ref.child(myRoom!!.key.toString()).child("emty").setValue(false)
                              break
@@ -49,7 +69,8 @@ class Repo(var ref : DatabaseReference) {
                      }
                createRoom(user,userApp)
                    .subscribeBy {itb ->
-                       if (itb)
+                          owner = true
+                          setInOut(owner)
                           it.onSuccess("owner")
                    }
                ref.removeEventListener(listenerRooms!!)
@@ -66,9 +87,9 @@ class Repo(var ref : DatabaseReference) {
         return Observable.create {
             listenerMessage = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                var message1 = snapshot.getValue(Massage::class.java)
-                it.onNext(message1)
-                if (message1!!.end) {
+                var messageIn = snapshot.getValue(Massage::class.java)
+                it.onNext(messageIn)
+                if (messageIn!!.end) {
                     it.onComplete()
                     disConnectFromChat()
                 }
@@ -77,17 +98,17 @@ class Repo(var ref : DatabaseReference) {
                     it.onError(Throwable("Message not loaded"))
                 }
             }
-            ref.child(myRoom!!.key.toString()).child("message1").addValueEventListener(listenerMessage as ValueEventListener)
+            refMessageIn.addValueEventListener(listenerMessage as ValueEventListener)
         }
     }
 
     fun disConnectFromChat() {
-       ref.child(myRoom!!.key.toString()).child("message1").removeEventListener(listenerMessage!!)
-       ref.child(myRoom!!.key.toString()).child("emty").setValue(true)
+        refMessageIn.removeEventListener(listenerMessage!!)
+        myRef.child("emty").setValue(true)
     }
 
     fun createRoom(user : User, userApp : UserApp) : Single<Boolean> {
-        myRoom = Room(getKey(), user, userApp)
+        setRoom(Room(getKey(), user, userApp))
         saveRoom(myRoom!!)
         owner = true
         return Single.create {
@@ -104,7 +125,7 @@ class Repo(var ref : DatabaseReference) {
                     it.onError(Throwable("Message not loaded"))
                 }
             }
-            ref.child(myRoom!!.key.toString()).child("empty").addValueEventListener(listenerEmpty as ValueEventListener)
+            myRef.child("empty").addValueEventListener(listenerEmpty as ValueEventListener)
 
 
         }
@@ -112,7 +133,7 @@ class Repo(var ref : DatabaseReference) {
 
 
     fun sendMessage(message: Massage) {
-        ref.child(myRoom!!.key.toString()).child("message2").setValue(message)
+        refMessageOut.setValue(message)
 
     }
 
