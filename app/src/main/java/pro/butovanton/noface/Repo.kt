@@ -5,6 +5,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
@@ -42,12 +43,16 @@ class Repo(var ref : DatabaseReference) {
                              myRoom = room
                              owner = false
                              it.onSuccess("guest")
-                             ref.removeEventListener(listenerRooms!!)
+                             ref.child(myRoom!!.key.toString()).child("emty").setValue(false)
                              break
                          }
                      }
-
-               // createRoom(user,userApp)
+               createRoom(user,userApp)
+                   .subscribeBy {itb ->
+                       if (itb)
+                          it.onSuccess("owner")
+                   }
+               ref.removeEventListener(listenerRooms!!)
                }
                override fun onCancelled(error: DatabaseError) {
                   it.onError(Throwable("FireBase not loaded"))
@@ -78,14 +83,31 @@ class Repo(var ref : DatabaseReference) {
 
     fun disConnectFromChat() {
        ref.child(myRoom!!.key.toString()).child("message1").removeEventListener(listenerMessage!!)
-       myRoom!!.empty = false
-       saveRoom(myRoom)
+       ref.child(myRoom!!.key.toString()).child("emty").setValue(true)
     }
 
-    fun createRoom(user : User, userApp : UserApp) {
+    fun createRoom(user : User, userApp : UserApp) : Single<Boolean> {
         myRoom = Room(getKey(), user, userApp)
         saveRoom(myRoom!!)
         owner = true
+        return Single.create {
+            listenerEmpty = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var empty = snapshot.getValue(Boolean::class.java)
+                    if (empty == false) {
+                        it.onSuccess(true)
+                        ref.child(myRoom!!.key.toString()).child("empty")
+                            .removeEventListener(listenerEmpty!!)
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    it.onError(Throwable("Message not loaded"))
+                }
+            }
+            ref.child(myRoom!!.key.toString()).child("empty").addValueEventListener(listenerEmpty as ValueEventListener)
+
+
+        }
     }
 
 
