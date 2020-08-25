@@ -95,8 +95,8 @@ class Repo(var ref : DatabaseReference) {
                     deleteRoom()
                     return
                 }
-
-                it.onNext(messageIn)
+                if (messageIn != null)
+                    it.onNext(messageIn)
                 }
                 override fun onCancelled(error: DatabaseError) {
                     it.onError(Throwable("Message not loaded"))
@@ -141,7 +141,7 @@ class Repo(var ref : DatabaseReference) {
     }
 
     fun onCancel() {
-        if (myRoom != null) {
+        if ( refMessageIn != null) {
             refMessageIn.removeEventListener(listenerEmpty!!)
             deleteRoom()
         }
