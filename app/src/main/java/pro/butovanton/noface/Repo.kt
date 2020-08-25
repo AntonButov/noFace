@@ -17,8 +17,8 @@ class Repo(var ref : DatabaseReference) {
 
     var myRoom : Room? = null
     lateinit var myRef : DatabaseReference
-    lateinit var refMessageIn : DatabaseReference
-    lateinit var refMessageOut : DatabaseReference
+    var refMessageIn : DatabaseReference? = null
+    var refMessageOut : DatabaseReference? = null
     var owner = false
     var listenerRooms : ValueEventListener? = null
     var listenerMessage : ValueEventListener? = null
@@ -102,7 +102,7 @@ class Repo(var ref : DatabaseReference) {
                     it.onError(Throwable("Message not loaded"))
                 }
             }
-             refMessageIn.addValueEventListener(listenerMessage as ValueEventListener)
+             refMessageIn!!.addValueEventListener(listenerMessage as ValueEventListener)
         }
     }
 
@@ -111,7 +111,7 @@ class Repo(var ref : DatabaseReference) {
             var messagEnd = Massage()
             messagEnd.end = true
             sendMessage(messagEnd)
-            refMessageIn.removeEventListener(listenerMessage!!)
+            refMessageIn!!.removeEventListener(listenerMessage!!)
 
         }
     }
@@ -142,13 +142,13 @@ class Repo(var ref : DatabaseReference) {
 
     fun onCancel() {
         if ( refMessageIn != null) {
-            refMessageIn.removeEventListener(listenerEmpty!!)
+            refMessageIn!!.removeEventListener(listenerEmpty!!)
             deleteRoom()
         }
     }
 
     fun sendMessage(message: Massage) {
-        refMessageOut.setValue(message)
+        refMessageOut!!.setValue(message)
 
     }
 

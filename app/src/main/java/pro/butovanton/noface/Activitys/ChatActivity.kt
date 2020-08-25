@@ -44,8 +44,6 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         setContentView(R.layout.activity_chat)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-       var inent = intent.getStringExtra("keyRoom")
-
        d = model.connectToRoom()
            .subscribeBy({}, {
             textViewEditmessage.text = "Собеседник покинул чат ..."

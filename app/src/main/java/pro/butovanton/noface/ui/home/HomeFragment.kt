@@ -16,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import pro.butovanton.noface.Activitys.ChatActivity
 import pro.butovanton.noface.R
@@ -121,28 +122,17 @@ class HomeFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     progressDialog.incrementProgressBy(1)
-
                 }
 
             model.startSearching()
-                .observe(viewLifecycleOwner, {
-                if (it == null)
-                else { // есть пустая комната
+                .subscribeBy {
                     var intent = Intent(context, ChatActivity::class.java)
-                    if (it.equals("")) {
-                     // Запуск чат активити когда мы хозяева
-                        intent.putExtra("keyRoom", "")
-                    }
-                    else {
-                        intent.putExtra("keyRoom", it)
-                                  }
                     startActivityForResult(intent, 101)
                     d.dispose()
                     progressDialog.hide()
-
-                }
-            })
         }
+        }
+
         return root
     }
 
@@ -171,7 +161,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        model.startSearching().removeObservers(this)
         if (d != null)
                 d.dispose()
     }
