@@ -23,6 +23,7 @@ class Repo(var ref : DatabaseReference) {
     var listenerRooms : ValueEventListener? = null
     var listenerMessage : ValueEventListener? = null
     var listenerEmpty : ValueEventListener? = null
+    var listenerEmptyOnDialog : ValueEventListener? = null
 
     fun saveRoom(room: Room?) : Task<Void> {
         return ref
@@ -63,8 +64,9 @@ class Repo(var ref : DatabaseReference) {
                              owner = false
                              setInOut(owner)
                              it.onSuccess("guest")
-                             ref.child(myRoom!!.key.toString()).child("emty").setValue(false)
-                             break
+                             myRef.child("empty").setValue(false)
+                             ref.removeEventListener(listenerRooms!!)
+                             return
                          }
                      }
                createRoom(user,userApp)
@@ -89,22 +91,35 @@ class Repo(var ref : DatabaseReference) {
                 override fun onDataChange(snapshot: DataSnapshot) {
                 var messageIn = snapshot.getValue(Massage::class.java)
                 it.onNext(messageIn)
-                if (messageIn!!.end) {
-                    it.onComplete()
-                    disConnectFromChat()
-                }
                 }
                 override fun onCancelled(error: DatabaseError) {
                     it.onError(Throwable("Message not loaded"))
                 }
             }
+            listenerEmptyOnDialog = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var empty = snapshot.getValue(Boolean::class.java)
+                    if (empty == true) {
+                            it.onComplete()
+                            disConnectFromChat()
+                                                         //Собеседник вышел из чата.
+                            deleteRoom()
+                        }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    it.onError(Throwable("Message not loaded"))
+                }
+            }
+            myRef.child("empty").addValueEventListener(listenerEmptyOnDialog as ValueEventListener)
             refMessageIn.addValueEventListener(listenerMessage as ValueEventListener)
         }
     }
 
     fun disConnectFromChat() {
+        myRef.child("empty")
+            .removeEventListener(listenerEmptyOnDialog!!)
         refMessageIn.removeEventListener(listenerMessage!!)
-        myRef.child("emty").setValue(true)
+        myRef.child("empty").setValue(true)
     }
 
     fun createRoom(user : User, userApp : UserApp) : Single<Boolean> {
@@ -117,7 +132,7 @@ class Repo(var ref : DatabaseReference) {
                     var empty = snapshot.getValue(Boolean::class.java)
                     if (empty == false) {
                         it.onSuccess(true)
-                        ref.child(myRoom!!.key.toString()).child("empty")
+                        myRef.child("empty")
                             .removeEventListener(listenerEmpty!!)
                     }
                 }
@@ -130,7 +145,6 @@ class Repo(var ref : DatabaseReference) {
 
         }
     }
-
 
     fun sendMessage(message: Massage) {
         refMessageOut.setValue(message)
