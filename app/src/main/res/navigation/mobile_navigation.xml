@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/nav_gallery"
         android:name="pro.butovanton.noface.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
+        android:label="@string/menu_dont_advert"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment

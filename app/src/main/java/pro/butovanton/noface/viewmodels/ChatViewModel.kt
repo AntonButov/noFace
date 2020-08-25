@@ -19,7 +19,7 @@ class ChatViewModel() : ViewModel() {
  val repo = (App).appcomponent.getRepo()
 
  fun connectToRoom() : io.reactivex.rxjava3.core.Observable<Massage> {
-  return repo.connecToChat()
+  return repo.toChat()
  }
 
  fun disconnectChat() {

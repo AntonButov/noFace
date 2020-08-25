@@ -105,12 +105,15 @@ class HomeFragment : Fragment() {
         performClickGender2()
 
         val fab: FloatingActionButton = root.findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            progressDialog = ProgressDialog(view.context)
+        fab.setOnClickListener {
+            progressDialog = ProgressDialog(it.context)
             progressDialog.setMessage("Поиск чата")
             progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
             progressDialog.show()
             progressDialog.max = 100
+            progressDialog.setOnCancelListener {
+            model.onCancel()
+            }
 
             d = Observable
                 .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
@@ -118,6 +121,7 @@ class HomeFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     progressDialog.incrementProgressBy(1)
+
                 }
 
             model.startSearching()
@@ -168,8 +172,10 @@ class HomeFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         model.startSearching().removeObservers(this)
-        d.dispose()
+        if (d != null)
+                d.dispose()
     }
+
 
 }
 

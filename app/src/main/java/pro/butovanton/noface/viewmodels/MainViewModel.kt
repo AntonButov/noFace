@@ -18,7 +18,6 @@ class MainViewModel() : ViewModel() {
 
     var user = User()
     var userApp = UserApp()
-    lateinit var d : Disposable
     private var getRooms = MutableLiveData<String>(null)
 
     fun startSearching() : LiveData<String> {
@@ -26,9 +25,13 @@ class MainViewModel() : ViewModel() {
          repo.getRooms(user, userApp)
                 .subscribeBy {
                 getRooms.value = it
+                getRooms.value = null
                 }
      return getRooms
     }
 
+    fun onCancel() {
+        repo.onCancel()
+    }
 
  }

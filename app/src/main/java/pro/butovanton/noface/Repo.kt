@@ -23,7 +23,6 @@ class Repo(var ref : DatabaseReference) {
     var listenerRooms : ValueEventListener? = null
     var listenerMessage : ValueEventListener? = null
     var listenerEmpty : ValueEventListener? = null
-    var listenerEmptyOnDialog : ValueEventListener? = null
 
     fun saveRoom(room: Room?) : Task<Void> {
         return ref
@@ -85,41 +84,36 @@ class Repo(var ref : DatabaseReference) {
        }
    }
 
-    fun connecToChat() : Observable<Massage> {
+    fun toChat() : Observable<Massage> {
         return Observable.create {
             listenerMessage = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                 var messageIn = snapshot.getValue(Massage::class.java)
+                if (messageIn != null && messageIn!!.end) {
+                    it.onComplete()
+                    disConnectFromChat()
+                    deleteRoom()
+                    return
+                }
+
                 it.onNext(messageIn)
                 }
                 override fun onCancelled(error: DatabaseError) {
                     it.onError(Throwable("Message not loaded"))
                 }
             }
-            listenerEmptyOnDialog = object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    var empty = snapshot.getValue(Boolean::class.java)
-                    if (empty == true) {
-                            it.onComplete()
-                            disConnectFromChat()
-                                                         //Собеседник вышел из чата.
-                            deleteRoom()
-                        }
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    it.onError(Throwable("Message not loaded"))
-                }
-            }
-            myRef.child("empty").addValueEventListener(listenerEmptyOnDialog as ValueEventListener)
-            refMessageIn.addValueEventListener(listenerMessage as ValueEventListener)
+             refMessageIn.addValueEventListener(listenerMessage as ValueEventListener)
         }
     }
 
     fun disConnectFromChat() {
-        myRef.child("empty")
-            .removeEventListener(listenerEmptyOnDialog!!)
-        refMessageIn.removeEventListener(listenerMessage!!)
-        myRef.child("empty").setValue(true)
+        if (myRoom != null) {
+            var messagEnd = Massage()
+            messagEnd.end = true
+            sendMessage(messagEnd)
+            refMessageIn.removeEventListener(listenerMessage!!)
+
+        }
     }
 
     fun createRoom(user : User, userApp : UserApp) : Single<Boolean> {
@@ -146,14 +140,20 @@ class Repo(var ref : DatabaseReference) {
         }
     }
 
+    fun onCancel() {
+        if (myRoom != null) {
+            refMessageIn.removeEventListener(listenerEmpty!!)
+            deleteRoom()
+        }
+    }
+
     fun sendMessage(message: Massage) {
         refMessageOut.setValue(message)
 
     }
 
     fun deleteRoom() {
-        TODO("")
-
-        owner = false
+        myRef.removeValue()
+        myRoom = null
     }
 }

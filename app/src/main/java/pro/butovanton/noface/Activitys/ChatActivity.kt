@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rockerhieu.emojicon.EmojiconGridFragment
 import com.rockerhieu.emojicon.EmojiconsFragment
 import com.rockerhieu.emojicon.emoji.Emojicon
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.android.synthetic.main.activity_chat.*
 import pro.butovanton.noface.Models.Massage
@@ -32,6 +33,7 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     private lateinit var recycler: RecyclerView
     private lateinit var adapterChat : RecyclerAdapterChat
     private lateinit var viewManager: RecyclerView.LayoutManager
+    lateinit var d : Disposable
 
     private val model: ChatViewModel by viewModels {
         (App).appcomponent.getChatViewModelFactory()
@@ -44,10 +46,14 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
 
        var inent = intent.getStringExtra("keyRoom")
 
-       var d = model.connectToRoom()
+       d = model.connectToRoom()
            .subscribeBy({}, {
-            textViewEditmessage.text = "Собеседник покинул чат "
+            textViewEditmessage.text = "Собеседник покинул чат ..."
             // Нужно прописать выход из чата.
+
+               d.dispose()
+               finish()
+
            },
                {
                    it.my = false
