@@ -17,11 +17,11 @@ class AppModule {
 
     @Provides
     fun provideMainViewModelFactory() : MainViewModelFactory {
-        return MainViewModelFactory(provideRepo())
+        return MainViewModelFactory()
     }
     @Provides
     fun provideChatViewModelFactory() : ChatViewModelFactory {
-        return ChatViewModelFactory(provideRepo())
+        return ChatViewModelFactory()
     }
 
     @Singleton

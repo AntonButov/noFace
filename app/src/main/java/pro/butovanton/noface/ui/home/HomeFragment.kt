@@ -120,17 +120,22 @@ class HomeFragment : Fragment() {
                     progressDialog.incrementProgressBy(1)
                 }
 
-            model.startSearching().observe(viewLifecycleOwner, {
+            model.startSearching()
+                .observe(viewLifecycleOwner, {
                 if (it == null)
                 else { // есть пустая комната
-                    if (it.equals(""))
-                    else {
-                        var intent = Intent(context, ChatActivity::class.java)
-                        intent.putExtra("keyRoom", it)
-                        startActivityForResult(intent, 101)
-                        d.dispose()
-                        progressDialog.hide()
+                    var intent = Intent(context, ChatActivity::class.java)
+                    if (it.equals("")) {
+                     // Запуск чат активити когда мы хозяева
+                        intent.putExtra("keyRoom", "")
                     }
+                    else {
+                        intent.putExtra("keyRoom", it)
+                                  }
+                    startActivityForResult(intent, 101)
+                    d.dispose()
+                    progressDialog.hide()
+
                 }
             })
         }

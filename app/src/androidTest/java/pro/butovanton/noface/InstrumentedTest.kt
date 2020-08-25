@@ -2,11 +2,6 @@ package pro.butovanton.noface
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.database.ChildEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import io.reactivex.rxjava3.internal.jdk8.FlowableFlatMapStream.subscribe
 import io.reactivex.rxjava3.kotlin.subscribeBy
 
 import org.junit.Test
@@ -58,15 +53,11 @@ class InstrumentedTest {
     @Test
     fun getRoomChield() {
         var count = CountDownLatch(1)
-        var d = repo.getRooms()
+        var d = repo.getRooms(User(),UserApp() )
             .subscribeBy ({  assertTrue(false)
                 } ,
                 {
                     count.countDown()
-                }    ,
-                {
-                assertTrue(it.key.equals(TESTID))
-                Log.d("DEBUG", "room " + it.key)
                 }
             )
        if (!count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
@@ -76,7 +67,7 @@ class InstrumentedTest {
     @Test
     fun connectToChat() {
        var count = CountDownLatch(1)
-       var d = repo.connecToChat(TESTID)
+       var d = repo.connecToChat()
             .subscribeBy (
                 {},{
                     count.countDown()
@@ -85,7 +76,7 @@ class InstrumentedTest {
             })
         if (!count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
         d.dispose()
-        repo.disConnectFromChat(TESTID)
+        repo.disConnectFromChat()
     }
 
  }

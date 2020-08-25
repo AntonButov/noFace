@@ -20,14 +20,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import pro.butovanton.noface.Repo
 
-class ChatViewModelFactory(
-    private val repo: Repo
-) : ViewModelProvider.Factory {
+class ChatViewModelFactory() : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(ChatViewModel: Class<T>): T {
-        return ChatViewModel(
-            repo
-        ) as T
+        return ChatViewModel() as T
     }
 }

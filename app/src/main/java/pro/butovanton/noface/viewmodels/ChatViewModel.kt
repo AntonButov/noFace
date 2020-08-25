@@ -11,17 +11,23 @@ import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
 import pro.butovanton.noface.Models.UserApp
 import pro.butovanton.noface.Repo
+import pro.butovanton.noface.di.App
 
 
-class ChatViewModel(val repo: Repo) : ViewModel() {
+class ChatViewModel() : ViewModel() {
 
- var keyRoom = ""
+ val repo = (App).appcomponent.getRepo()
 
  fun connectToRoom() : io.reactivex.rxjava3.core.Observable<Massage> {
-  return repo.connecToChat(keyRoom)
+  return repo.connecToChat()
  }
 
  fun disconnectChat() {
-  repo.disConnectFromChat(keyRoom)
+  repo.disConnectFromChat()
  }
+
+ fun sendMessage(message : Massage) {
+  repo.sendMessage(message)
+ }
+
  }

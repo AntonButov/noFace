@@ -9,9 +9,12 @@ import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
 import pro.butovanton.noface.Models.UserApp
 import pro.butovanton.noface.Repo
+import pro.butovanton.noface.di.App
 
 
-class MainViewModel(val repo: Repo) : ViewModel() {
+class MainViewModel() : ViewModel() {
+
+    val repo = (App).appcomponent.getRepo()
 
     var user = User()
     var userApp = UserApp()
@@ -20,43 +23,12 @@ class MainViewModel(val repo: Repo) : ViewModel() {
 
     fun startSearching() : LiveData<String> {
 
-        d = repo.getRooms()
-                .filter { it.impty }
-              //  .filter { filterByGender(it.user1.gender) }
-                .subscribeBy({
-
-                }, {
-                    repo.createRoom(user, userApp)
-                    getRooms.setValue("")
-                },
-                    {
-                        connectToRoom(it)
-                        getRooms.setValue(it.key)
-                        d.dispose()
-                    })
-        return getRooms
+         repo.getRooms(user, userApp)
+                .subscribeBy {
+                getRooms.value = it
+                }
+     return getRooms
     }
 
-    fun stopSearching() {
-        d.dispose()
 
-    }
-
-    fun filterByGender(gender: Int) : Boolean {
-        if (user.gender == 2) return true
-        return userApp.gender == gender
-    }
-
-    fun deleteCreatingRoom() {
-        TODO("Удаляем созданую комнату")
-    }
-
-    fun connectToRoom(room: Room) {
-        room.impty = false
-        repo.saveRoom(room)
-    }
-
-    fun freeRoom() {
-
-    }
  }

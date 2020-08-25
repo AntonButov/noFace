@@ -6,7 +6,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 class Room() {
 
              var key : String? = null
-             var impty = true
+             var empty = true
     lateinit var user1 : User
     var user2  = User()
              var userApp : UserApp? = null

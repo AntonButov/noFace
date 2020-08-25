@@ -42,7 +42,7 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         setContentView(R.layout.activity_chat)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-       model.keyRoom = intent.getStringExtra("keyRoom")
+       var inent = intent.getStringExtra("keyRoom")
 
        var d = model.connectToRoom()
            .subscribeBy({}, {
@@ -78,6 +78,7 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         sendButton.setOnClickListener {
             var message = Massage(Date().time, edMessage.text.toString(), true)
             adapterChat.messages.add(0, message)
+            model.sendMessage(message)
             adapterChat.notifyDataSetChanged()
             edMessage.text.clear()
         }

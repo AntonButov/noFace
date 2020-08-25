@@ -21,13 +21,11 @@ import androidx.lifecycle.ViewModelProvider
 import pro.butovanton.noface.Repo
 
 class MainViewModelFactory(
-    private val repo: Repo
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(MainViewModel: Class<T>): T {
         return MainViewModel(
-            repo
         ) as T
     }
 }
