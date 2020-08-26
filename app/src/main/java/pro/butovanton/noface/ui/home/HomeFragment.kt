@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,14 +13,12 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import pro.butovanton.noface.Activitys.ChatActivity
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.MainViewModel
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 
@@ -34,7 +30,6 @@ class HomeFragment : Fragment() {
     lateinit var bMan2 : Button
     lateinit var bFeMale2 : Button
     lateinit var bAnyGender2 : Button
-    lateinit var d : Disposable
     lateinit var progressDialog : ProgressDialog
 
     private val model: MainViewModel by viewModels {
@@ -48,6 +43,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+
         bMan1 = root.findViewById(R.id.man1)
         bFeMale1 = root.findViewById(R.id.feMale1)
         bAnyGender1 = root.findViewById(R.id.anyGender1)
@@ -116,7 +112,7 @@ class HomeFragment : Fragment() {
             model.onCancel()
             }
 
-            d = Observable
+           var d = Observable
                 .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -128,8 +124,8 @@ class HomeFragment : Fragment() {
                 .subscribeBy {
                     var intent = Intent(context, ChatActivity::class.java)
                     startActivityForResult(intent, 101)
-                    d.dispose()
                     progressDialog.hide()
+                    d.dispose()
         }
         }
 
@@ -161,8 +157,6 @@ class HomeFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (d != null)
-                d.dispose()
     }
 }
 

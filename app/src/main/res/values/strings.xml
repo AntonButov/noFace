@@ -17,9 +17,8 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="rules">Запрещено: "\n" - Обсуждать и распространять материалы эротического и порнографического содержания "\n" - Предлагать виртуальный секс и т.п. "\n" - Рассылать спам и рекламу "\n" - Продавать товары или услуги "\n" - Оскоорблять собеседника и угрожать "\n""\n"</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
-    <string name="emoji_edit_text">Emoji EditText %s</string>
-    <string name="Chat">Чат</string>
+    <string name="Chat">Анонимный чат</string>
 </resources>

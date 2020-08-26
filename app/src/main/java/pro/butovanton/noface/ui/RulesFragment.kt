@@ -24,9 +24,7 @@ class RulesFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_rules, container, false)
-       // val textView: TextView = root.findViewById(R.id.text_gallery)
-
-        return root
+      return root
     }
 }
 

@@ -6,6 +6,12 @@
     app:startDestination="@+id/nav_home">
 
     <fragment
+        android:id="@+id/nav_rules"
+        android:name="pro.butovanton.noface.ui.RulesFragment"
+        android:label="@string/Chat"
+        tools:layout="@layout/fragment_rules" />
+
+    <fragment
         android:id="@+id/nav_home"
         android:name="pro.butovanton.noface.ui.home.HomeFragment"
         android:label="@string/Chat"

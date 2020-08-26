@@ -1,9 +1,11 @@
 package pro.butovanton.noface.Activitys
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.widget.Button
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
@@ -15,11 +17,13 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.MainViewModel
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -41,6 +45,17 @@ class MainActivity : AppCompatActivity() {
         ), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+            var firstDialog =  AlertDialog.Builder(this)
+                .setTitle("Правила чата.")
+                .setMessage(getResources().getString(R.string.rules))
+                .setPositiveButton("Согласен", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+
+                    }
+                })
+                .create()
+        firstDialog.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -53,3 +68,4 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }
+
