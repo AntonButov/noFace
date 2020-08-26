@@ -3,14 +3,14 @@ package pro.butovanton.noface.Activitys
 import android.content.Context
 import android.graphics.Point
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rockerhieu.emojicon.EmojiconGridFragment
@@ -24,6 +24,7 @@ import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.ChatViewModel
 import java.util.*
+
 
 class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
 
@@ -46,8 +47,8 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
 
        d = model.connectToRoom()
            .subscribeBy({}, {
-            textViewEditmessage.text = "Собеседник покинул чат ..."
-            // Нужно прописать выход из чата.
+               textViewEditmessage.text = "Собеседник покинул чат ..."
+               // Нужно прописать выход из чата.
 
                d.dispose()
                finish()
@@ -55,17 +56,44 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
            },
                {
                    it.my = false
-
-                   adapterChat.messages.add(0, it)
-                   adapterChat.notifyDataSetChanged()
+                   if (it.edit)
+                       textViewEditmessage.visibility = View.VISIBLE
+                   else {
+                       textViewEditmessage.visibility = View.INVISIBLE
+                       adapterChat.messages.add(0, it)
+                       adapterChat.notifyDataSetChanged()
+                   }
                })
 
 
         edMessage = findViewById<View>(R.id.editText) as EditText
 
         edMessage.setOnClickListener {
-            //  Нужно передовать вводит сообщение
+            it.isFocusable = true
+            it.isFocusableInTouchMode = true
         }
+
+        edMessage.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+            if (!s.toString().equals("")) {
+                var messageEdit = Massage()
+                messageEdit.edit = true
+                model.sendMessage(messageEdit)
+            }
+            }
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+
+            }
+        })
 
         imogiButton.setOnClickListener {
             imogi = !imogi

@@ -52,6 +52,7 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <EditText
+            android:focusable="false"
 
             android:id="@+id/editText"
             android:layout_width="0dp"

@@ -9,6 +9,7 @@ import org.junit.runner.RunWith
 
 import org.junit.Assert.*
 import org.junit.Before
+import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
 import pro.butovanton.noface.Models.UserApp
@@ -42,6 +43,8 @@ class InstrumentedTest {
         var userApp = UserApp()
         var room = Room(TESTID, user,userApp)
 
+        repo.setRoom(room)
+        repo.setInOut(true)
         repo.saveRoom(room)
             .addOnCompleteListener{
                 assertTrue(true)
@@ -66,14 +69,18 @@ class InstrumentedTest {
 
     @Test
     fun connectToChat() {
+       saveRoom()
        var count = CountDownLatch(1)
-       var d = repo.connecToChat()
-            .subscribeBy (
+       var d = repo.toChat()
+           .subscribeBy (
                 {},{
                     count.countDown()
                 },{
                     assertTrue(it.text.equals(""))
             })
+        var messageEnd = Massage()
+        messageEnd.end = true
+        repo.sendMessage(message = messageEnd)
         if (!count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
         d.dispose()
         repo.disConnectFromChat()

@@ -17,9 +17,10 @@ class Repo(var ref : DatabaseReference) {
 
     var myRoom : Room? = null
     lateinit var myRef : DatabaseReference
+    lateinit var myRefEmpty : DatabaseReference
     var refMessageIn : DatabaseReference? = null
     var refMessageOut : DatabaseReference? = null
-    var owner = false
+
     var listenerRooms : ValueEventListener? = null
     var listenerMessage : ValueEventListener? = null
     var listenerEmpty : ValueEventListener? = null
@@ -39,6 +40,7 @@ class Repo(var ref : DatabaseReference) {
     fun setRoom(room : Room) {
         myRoom = room
         myRef = ref.child(myRoom!!.key.toString())
+        myRefEmpty = myRef.child("empty")
     }
 
     fun setInOut(owner : Boolean) {
@@ -60,18 +62,16 @@ class Repo(var ref : DatabaseReference) {
                          var room = dt.getValue(Room::class.java)
                          if ( room!!.empty ) {
                              setRoom(room)
-                             owner = false
-                             setInOut(owner)
+                             setInOut(false)
                              it.onSuccess("guest")
-                             myRef.child("empty").setValue(false)
+                             myRefEmpty.setValue(false)
                              ref.removeEventListener(listenerRooms!!)
                              return
                          }
                      }
                createRoom(user,userApp)
                    .subscribeBy {itb ->
-                          owner = true
-                          setInOut(owner)
+                         setInOut(true)
                           it.onSuccess("owner")
                    }
                ref.removeEventListener(listenerRooms!!)
@@ -119,14 +119,13 @@ class Repo(var ref : DatabaseReference) {
     fun createRoom(user : User, userApp : UserApp) : Single<Boolean> {
         setRoom(Room(getKey(), user, userApp))
         saveRoom(myRoom!!)
-        owner = true
         return Single.create {
             listenerEmpty = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var empty = snapshot.getValue(Boolean::class.java)
                     if (empty == false) {
                         it.onSuccess(true)
-                        myRef.child("empty")
+                        myRefEmpty
                             .removeEventListener(listenerEmpty!!)
                     }
                 }
@@ -134,7 +133,7 @@ class Repo(var ref : DatabaseReference) {
                     it.onError(Throwable("Message not loaded"))
                 }
             }
-            myRef.child("empty").addValueEventListener(listenerEmpty as ValueEventListener)
+            myRefEmpty.addValueEventListener(listenerEmpty as ValueEventListener)
 
 
         }

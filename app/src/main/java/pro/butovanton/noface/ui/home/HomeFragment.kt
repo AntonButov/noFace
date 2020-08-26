@@ -164,7 +164,5 @@ class HomeFragment : Fragment() {
         if (d != null)
                 d.dispose()
     }
-
-
 }
 

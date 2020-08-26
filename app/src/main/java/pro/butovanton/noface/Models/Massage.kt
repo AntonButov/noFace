@@ -8,8 +8,9 @@ class Massage() {
 
     var time: Long = 0
     var text: String = ""
-    var my: Boolean = true
-    var end: Boolean = false
+    var my = true
+    var end = false
+    var edit = false
 
  constructor(time: Long,
     text: String,
