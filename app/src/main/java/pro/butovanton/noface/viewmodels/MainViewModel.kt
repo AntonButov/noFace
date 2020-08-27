@@ -3,6 +3,8 @@ package pro.butovanton.noface.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.reactivex.rxjava3.annotations.NonNull
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.Observables
@@ -17,16 +19,23 @@ import pro.butovanton.noface.di.App
 class MainViewModel() : ViewModel() {
 
     val repo = (App).appcomponent.getRepo()
+    var searching : Single<String>? = null
 
     var user = User()
     var userApp = UserApp()
 
-    fun startSearching() : Single<String> {
-        return repo.getRooms(user, userApp)
+    fun startSearching() : Single<String>? {
+        if (searching == null)
+            searching = repo.getRooms(user, userApp).doOnSuccess {
+                searching == null
+            }
+        return searching
+
     }
 
     fun onCancel() {
         repo.onCancel()
+
     }
 
  }

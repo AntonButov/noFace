@@ -17,14 +17,7 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.android.synthetic.main.app_bar_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import pro.butovanton.noface.R
-import pro.butovanton.noface.di.App
-import pro.butovanton.noface.viewmodels.MainViewModel
-import java.util.*
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 

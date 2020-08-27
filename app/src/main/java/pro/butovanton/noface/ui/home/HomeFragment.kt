@@ -121,12 +121,12 @@ class HomeFragment : Fragment() {
                 }
 
             model.startSearching()
-                .subscribeBy {
+                ?.subscribeBy {
                     var intent = Intent(context, ChatActivity::class.java)
                     startActivityForResult(intent, 101)
                     progressDialog.hide()
                     d.dispose()
-        }
+                }
         }
 
         return root
