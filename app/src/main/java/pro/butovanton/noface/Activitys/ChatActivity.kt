@@ -2,7 +2,13 @@ package pro.butovanton.noface.Activitys
 
 import android.content.Context
 import android.graphics.Point
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -11,6 +17,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -64,6 +71,7 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
                            textViewEditmessage.visibility = View.INVISIBLE
                            adapterChat.messages.add(0, it)
                            adapterChat.notifyDataSetChanged()
+                           notify(baseContext)
                        }
                    }
                })
@@ -159,6 +167,47 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
 
     override fun onEmojiconBackspaceClicked(v: View?) {
         EmojiconsFragment.backspace(edMessage);
+    }
+
+    fun isSound() : Boolean {
+        return PreferenceManager.getDefaultSharedPreferences(baseContext)
+            .getBoolean("sound", false)
+    }
+
+    fun playSound(context: Context?) {
+        val myMediaPlayer: MediaPlayer
+        myMediaPlayer = MediaPlayer.create(context, R.raw.notify_sleep_order)
+        myMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+        myMediaPlayer.start()
+    }
+
+    fun isVibro() : Boolean {
+        return PreferenceManager.getDefaultSharedPreferences(baseContext)
+            .getBoolean("vibro", false)
+    }
+
+    fun vibrateDevice(context: Context) {
+        val vibrator = ContextCompat.getSystemService(context, Vibrator::class.java)
+        vibrator?.let {
+            if (Build.VERSION.SDK_INT >= 26) {
+                it.vibrate(
+                    VibrationEffect.createOneShot(
+                        100,
+                        VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                it.vibrate(100)
+            }
+        }
+    }
+
+    fun notify(context: Context) {
+        if (isVibro())
+            vibrateDevice(context)
+        if (isSound())
+            playSound(context)
     }
 
     override fun onDestroy() {

@@ -2,12 +2,20 @@ package pro.butovanton.noface.Activitys
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
+import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -228,12 +236,12 @@ class HomeFragment : Fragment() {
             }
 
            d.add(Observable
-                .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    progressDialog.incrementProgressBy(1)
-                })
+               .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
+               .subscribeOn(Schedulers.io())
+               .observeOn(AndroidSchedulers.mainThread())
+               .subscribe {
+                   progressDialog.incrementProgressBy(1)
+               })
 
             model.startSearching()
                 ?.subscribeBy {

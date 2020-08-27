@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:picker="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:key="general" android:title="Общие настройки">
+        <CheckBoxPreference
+
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="autoSelect"
+            android:summary="Автоотправка предложений на ближайшие заказы"
+            android:title="Автопринятие заказа" />
+
+        <com.michaelnovakjr.numberpicker.NumberPickerPreferenceFloat
+            android:id="@+id/radiusPicker"
+            android:key="radiusAutoSelect"
+            android:title="Радиус автопринятия заявок"
+            picker:defaultValue="3"
+            picker:endRange="60"
+            
+            picker:startRange="3" />
+
+        <ListPreference
+                android:key="navigator"
+                android:title="Навигатор при построении маршрута"
+                android:defaultValue="yandex"
+                android:entries="@array/navigatorArray"
+                android:entryValues="@array/navigatorValues"
+                >
+
+        </ListPreference>
+
+        <ListPreference
+            android:key="typeRingtone"
+            android:title="Тип сигнала"
+            android:defaultValue="default"
+            android:entries="@array/typeRingtoneArray"
+            android:entryValues="@array/typeRingtoneValues"
+            android:summary="По умолчанию (IQTaxi)"
+            />
+
+        <Preference
+             android:key="ringtone"
+             android:title="Выберите тип сигнала"
+             android:enabled="false"
+             />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
