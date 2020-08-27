@@ -22,7 +22,7 @@ import pro.butovanton.noface.R
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-
+    var consept = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +44,13 @@ class MainActivity : AppCompatActivity() {
                 .setMessage(getResources().getString(R.string.rules))
                 .setPositiveButton("Согласен", object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface?, which: Int) {
-
+                    consept = true
                     }
                 })
                 .create()
+        firstDialog.setOnCancelListener {
+            finish()
+        }
         firstDialog.show()
     }
 
@@ -60,5 +63,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
 }
 

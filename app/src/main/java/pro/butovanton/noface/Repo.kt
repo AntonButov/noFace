@@ -64,28 +64,28 @@ class Repo(var ref : DatabaseReference) {
            deleting = false
            listenerRooms = object : ValueEventListener {
                override fun onDataChange(snapshot: DataSnapshot) {
-                var room = freeRoomFind(snapshot)
-                if (room != null && !room.key!!.equals(myRoom!!.key)) {
-                    setRoom(room)
-                    setInOut(false)
-                    it.onSuccess("guest")
-                    myRefEmpty.setValue(false)
-                }
-                else {
-                    if (myRoom == null) {
-                        if (deleting == false) {
-                            createRoom(user, userApp)
-                                .subscribeBy { itb ->
-                                    setInOut(true)
-                                    it.onSuccess("owner")
-                                }
-                        }
-                    }
-                }
+               if (myRoom == null) {
+                   var room = freeRoomFind(snapshot)
+                   if (room != null ) {
+                       setRoom(room)
+                       setInOut(false)
+                       it.onSuccess("guest")
+                       myRefEmpty.setValue(false)
+                   } else {
+                       if (deleting == false) {
+                           createRoom(user, userApp)
+                               .subscribeBy { itb ->
+                                   setInOut(true)
+                                   it.onSuccess("owner")
+                               }
+                       }
+                   }
+               }
                ref.removeEventListener(listenerRooms!!)
                }
                override fun onCancelled(error: DatabaseError) {
                   it.onError(Throwable("FireBase not loaded"))
+               ref.removeEventListener(listenerRooms!!)
                }
            }
            ref.addValueEventListener(listenerRooms as ValueEventListener)
