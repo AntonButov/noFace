@@ -28,6 +28,7 @@ class Repo(var ref : DatabaseReference) {
     var listenerRooms : ValueEventListener? = null
     var listenerMessage : ValueEventListener? = null
     var listenerEmpty : ValueEventListener? = null
+    var deleting = false
 
     fun saveRoom(room: Room?) : Task<Void> {
         return ref
@@ -60,21 +61,26 @@ class Repo(var ref : DatabaseReference) {
 
     fun getRooms(user : User, userApp : UserApp) : Single<String> {
        return Single.create {
+           deleting = false
            listenerRooms = object : ValueEventListener {
                override fun onDataChange(snapshot: DataSnapshot) {
                 var room = freeRoomFind(snapshot)
-                if (room != null) {
+                if (room != null && !room.key!!.equals(myRoom!!.key)) {
                     setRoom(room)
                     setInOut(false)
                     it.onSuccess("guest")
                     myRefEmpty.setValue(false)
                 }
                 else {
-                    createRoom(user, userApp)
-                        .subscribeBy { itb ->
-                            setInOut(true)
-                            it.onSuccess("owner")
+                    if (myRoom == null) {
+                        if (deleting == false) {
+                            createRoom(user, userApp)
+                                .subscribeBy { itb ->
+                                    setInOut(true)
+                                    it.onSuccess("owner")
+                                }
                         }
+                    }
                 }
                ref.removeEventListener(listenerRooms!!)
                }
@@ -136,17 +142,17 @@ class Repo(var ref : DatabaseReference) {
             listenerEmpty = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var empty = snapshot.getValue(Boolean::class.java)
-                    if (empty == false) {
-                        it.onSuccess(true)
-                        myRefEmpty
-                            .removeEventListener(listenerEmpty!!)
+                        if (empty == false) {
+                          it.onSuccess(true)
+                          myRefEmpty
+                              .removeEventListener(listenerEmpty!!)
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
                     it.onError(Throwable("Message not loaded"))
                 }
             }
-            myRefEmpty.addValueEventListener(listenerEmpty as ValueEventListener)
+               myRefEmpty.addValueEventListener(listenerEmpty as ValueEventListener)
 
 
         }
@@ -162,7 +168,9 @@ class Repo(var ref : DatabaseReference) {
         if ( refMessageIn != null && listenerEmpty != null) {
             refMessageIn!!.removeEventListener(listenerEmpty!!)
         }
-        deleteRoom()
+
+            deleting = true
+            deleteRoom()
     }
 
     fun sendMessage(message: Massage) {
