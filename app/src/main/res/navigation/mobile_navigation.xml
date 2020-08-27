@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/nav_rules"
-        android:name="pro.butovanton.noface.ui.RulesFragment"
+        android:name="pro.butovanton.noface.Activitys.RulesFragment"
         android:label="@string/Chat"
         tools:layout="@layout/fragment_rules" />
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="pro.butovanton.noface.ui.home.HomeFragment"
+        android:name="pro.butovanton.noface.Activitys.HomeFragment"
         android:label="@string/Chat"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="pro.butovanton.noface.ui.gallery.GalleryFragment"
+        android:name="pro.butovanton.noface.Activitys.GalleryFragment"
         android:label=""
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="pro.butovanton.noface.ui.slideshow.SlideshowFragment"
+        android:name="pro.butovanton.noface.Activitys.SlideshowFragment"
         android:label=""
         tools:layout="@layout/fragment_slideshow" />
 </navigation>
