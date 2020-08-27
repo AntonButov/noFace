@@ -12,15 +12,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Flowable.intervalRange
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observable.intervalRange
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.observers.DisposableCompletableObserver
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.android.synthetic.main.fragment_home.*
 import pro.butovanton.noface.Activitys.ChatActivity
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.MainViewModel
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 
 class HomeFragment : Fragment() {
@@ -33,7 +40,9 @@ class HomeFragment : Fragment() {
     lateinit var bAnyGender2 : Button
     lateinit var progressDialog : ProgressDialog
 
-    lateinit var d : Disposable
+    var d = CompositeDisposable()
+    lateinit var disposable : Disposable
+    var count = 2000
 
     private val model: MainViewModel by viewModels {
         (App).appcomponent.getMainViewModelFactory()
@@ -113,27 +122,43 @@ class HomeFragment : Fragment() {
             progressDialog.max = 100
             progressDialog.setOnCancelListener {
                model.onCancel()
-              d.dispose()
+               d!!.clear()
             }
 
-           d = Observable
+           d.add(Observable
                 .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {
                     progressDialog.incrementProgressBy(1)
-                }
+                })
 
             model.startSearching()
                 ?.subscribeBy {
                     var intent = Intent(context, ChatActivity::class.java)
                     startActivityForResult(intent, 101)
                     progressDialog.hide()
-                    d.dispose()
+                   d.clear()
                 }
         }
 
         return root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        disposable =  Observable.interval(1, TimeUnit.SECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+            count += (10 -java.util.Random().nextInt(20))
+            textViewCount.text = "Число пользователей онлайн: " + count
+            }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable.dispose()
     }
 
     fun setEnabled(enab: Boolean) {
@@ -159,11 +184,10 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
-        d.dispose()
         model.onCancel()
+        d.dispose()
     }
 }
 

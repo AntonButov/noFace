@@ -9,7 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,6 +26,7 @@
                 android:id="@+id/age1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16dp"
                 android:text="Ваш возраст" />
 
             <Button
@@ -74,6 +75,7 @@
                 android:id="@+id/age2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="16dp"
                 android:text="Возраст собеседника" />
 
             <Button
@@ -115,6 +117,7 @@
                 android:id="@+id/mabe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="16dp"
                 android:text="Можно несколько" />
         </LinearLayout>
     </LinearLayout>
@@ -123,7 +126,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -139,6 +142,8 @@
                 android:id="@+id/gender1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="16dp"
+
                 android:text="Ваш пол" />
 
             <Button
@@ -171,7 +176,7 @@
                 android:id="@+id/gender2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:textSize="16dp"
                 android:text="Пол собеседника" />
 
             <Button
@@ -216,4 +221,14 @@
         app:layout_constraintEnd_toEndOf="@+id/fab"
         app:layout_constraintStart_toStartOf="@+id/fab"
         app:layout_constraintTop_toTopOf="@+id/fab" />
+
+    <TextView
+        android:id="@+id/textViewCount"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:layout_marginBottom="16dp"
+        android:text="Число пользователей онлайн: 2000"
+        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
