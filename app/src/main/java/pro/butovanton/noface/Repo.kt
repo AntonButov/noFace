@@ -70,17 +70,15 @@ class Repo(var ref : DatabaseReference) {
                     if (it.equals("guest"))
                        find.onSuccess("guest")
                     else setRoom(user, userApp)
+                            .map { if (deleting == true)  deleteRoom() }
+                            .filter { deleting == false }
                             .subscribeBy {
-                               if (deleting == false) {
-                                  createRoom(user, userApp)
-                                           .subscribeBy { itb ->
-                                               setInOut(true)
-                                               find.onSuccess("owner")
-                                   }
-                               }
-                                else
-                                     deleteRoom()
-                               }
+                                createRoom(user, userApp)
+                                    .subscribeBy { itb ->
+                                        setInOut(true)
+                                        find.onSuccess("owner")
+                                    }
+                            }
                     Log.d(TAG,it)
             }
         }
@@ -92,6 +90,7 @@ class Repo(var ref : DatabaseReference) {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.d(TAG, "listenerRooms")
                 if (myRoom == null && listenerRoomsDispose == false) {
+                    deleteDesertedRoom(snapshot)
                     var room = freeRoomFind(snapshot)
                     if (room != null ) {
                         setRoom(room)
@@ -122,9 +121,10 @@ class Repo(var ref : DatabaseReference) {
             var resultRoom : Room? = null
             for (data in snapshot.children) {
                 var room = data.getValue(Room::class.java)
-                if (room!!.empty)
-                   resultRoom = room
-          //  break
+                if (room!!.empty) {
+                    resultRoom = room
+                break
+                }
             }
         return resultRoom
         }
@@ -183,8 +183,9 @@ fun setRoom(user: User, userApp: UserApp) : Single<Boolean> {
                     Log.d(TAG, "onCanceled firebase")
                 }
             }
-               myRefEmpty!!.addValueEventListener(listenerEmpty as ValueEventListener)
-
+               myRefEmpty!!.setValue(true).addOnSuccessListener {//открываем комнату
+                   myRefEmpty!!.addValueEventListener(listenerEmpty as ValueEventListener)
+               }
 
         }
     }
@@ -200,6 +201,14 @@ fun setRoom(user: User, userApp: UserApp) : Single<Boolean> {
         }
     }
 
+    fun deleteDesertedRoom( dataSnapshot: DataSnapshot) {
+        for (data in dataSnapshot.children) {
+            var room = data.getValue(Room::class.java)
+                if (room!!.message1.end || room.message2.end)
+                        deleteRoom(room)
+        }
+    }
+
     fun deleteRoom() {
         myRoom = null
         Log.d(TAG, "Room: null")
@@ -208,6 +217,10 @@ fun setRoom(user: User, userApp: UserApp) : Single<Boolean> {
                       .removeEventListener(listenerEmpty!!)
         if (myRef != null)
                myRef!!.removeValue()
+    }
+
+    fun deleteRoom( room : Room) {
+        ref.child(room.key.toString()).removeValue()
     }
 
     fun onCancel() {
