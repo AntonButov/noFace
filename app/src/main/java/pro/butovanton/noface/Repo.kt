@@ -6,10 +6,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import com.google.firebase.database.core.operation.Merge
 import io.reactivex.rxjava3.annotations.NonNull
-import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Maybe
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.Models.Room
@@ -32,6 +29,7 @@ class Repo(var ref : DatabaseReference) {
     var listenerEmpty : ValueEventListener? = null
     var deleting = false
     var listenerRoomsDispose = false
+    var settingRoom = false
 
     fun saveRoom(room: Room?) : Task<Void> {
         return ref
@@ -64,21 +62,22 @@ class Repo(var ref : DatabaseReference) {
 
     fun getRooms(user : User, userApp : UserApp) : Single<String> {
         return Single.create {find ->
-            deleting = false
             findFreeRoom(user, userApp)
                 .subscribeBy {
                     if (it.equals("guest"))
                        find.onSuccess("guest")
-                    else setRoom(user, userApp)
-                            .map { if (deleting == true)  deleteRoom() }
-                            .filter { deleting == false }
-                            .subscribeBy {
-                                createRoom(user, userApp)
-                                    .subscribeBy { itb ->
-                                        setInOut(true)
-                                        find.onSuccess("owner")
-                                    }
-                            }
+                    else
+                        if (settingRoom == false)
+                            setRoom(user, userApp)
+                                  .map { if (deleting == true)  deleteRoom() }
+                                  .filter { deleting == false }
+                                   .subscribeBy {
+                                        createRoom(user, userApp)
+                                            .subscribeBy { itb ->
+                                                setInOut(true)
+                                             find.onSuccess("owner")
+                                          }
+                                  }
                     Log.d(TAG,it)
             }
         }
@@ -89,8 +88,8 @@ class Repo(var ref : DatabaseReference) {
             listenerRooms = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.d(TAG, "listenerRooms")
+                deleteDesertedRoom(snapshot)
                 if (myRoom == null && listenerRoomsDispose == false) {
-                    deleteDesertedRoom(snapshot)
                     var room = freeRoomFind(snapshot)
                     if (room != null ) {
                         setRoom(room)
@@ -121,7 +120,7 @@ class Repo(var ref : DatabaseReference) {
             var resultRoom : Room? = null
             for (data in snapshot.children) {
                 var room = data.getValue(Room::class.java)
-                if (room!!.empty) {
+                if (room!!.empty && room.message1.end == false && room.message2.end == false) {
                     resultRoom = room
                 break
                 }
@@ -130,13 +129,16 @@ class Repo(var ref : DatabaseReference) {
         }
 
 fun setRoom(user: User, userApp: UserApp) : Single<Boolean> {
+    settingRoom = true
     return Single.create({
         setRoom(Room(getKey(), user, userApp))
         Log.d(TAG, "Room: " + myRoom!!.key.toString())
         saveRoom(myRoom!!)
             .addOnSuccessListener {  sucses ->
-                if (it != null)
-                   it.onSuccess(true)
+                if (it != null) {
+                    it.onSuccess(true)
+                    settingRoom = false
+                }
             }
     })
 }
@@ -205,30 +207,33 @@ fun setRoom(user: User, userApp: UserApp) : Single<Boolean> {
         for (data in dataSnapshot.children) {
             var room = data.getValue(Room::class.java)
                 if (room!!.message1.end || room.message2.end)
-                        deleteRoom(room)
+                        deleteRoom(data.key!!)
         }
     }
 
     fun deleteRoom() {
         myRoom = null
         Log.d(TAG, "Room: null")
-        if (myRefEmpty != null)
+        if (myRefEmpty != null && listenerEmpty != null)
              myRefEmpty!!
                       .removeEventListener(listenerEmpty!!)
         if (myRef != null)
-               myRef!!.removeValue()
+               myRef!!.removeValue().addOnSuccessListener {
+                   deleting = false
+               }
     }
 
-    fun deleteRoom( room : Room) {
-        ref.child(room.key.toString()).removeValue()
+    fun deleteRoom( key : String) {
+        ref.child(key).removeValue()
     }
 
     fun onCancel() {
         if ( refMessageIn != null && listenerEmpty != null) {
             refMessageIn!!.removeEventListener(listenerEmpty!!)
         }
-            deleting = true
-            deleteRoom()
+            if (settingRoom) deleting = true
+            else
+              deleteRoom()
     }
 
     fun sendMessage(message: Massage) {
