@@ -2,20 +2,13 @@ package pro.butovanton.noface.Activitys
 
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
-import android.content.Context
 import android.content.Intent
-import android.media.AudioManager
-import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.core.content.ContextCompat.getSystemService
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -60,6 +53,8 @@ class HomeFragment : Fragment() {
     private val model: MainViewModel by viewModels {
         (App).appcomponent.getMainViewModelFactory()
     }
+
+    private var mAuth = (App).appcomponent.getAuth()
 
     @SuppressLint("RestrictedApi")
     override fun onCreateView(
@@ -223,33 +218,40 @@ class HomeFragment : Fragment() {
 
         performClickAge2()
 
-        val fab: FloatingActionButton = root.findViewById(R.id.fab)
-        fab.setOnClickListener {
-            progressDialog = ProgressDialog(it.context)
-            progressDialog.setMessage("Поиск чата")
-            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-            progressDialog.show()
-            progressDialog.max = 100
-            progressDialog.setOnCancelListener {
-               model.onCancel()
-               d!!.clear()
-            }
-
-           d.add(Observable
-               .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
-               .subscribeOn(Schedulers.io())
-               .observeOn(AndroidSchedulers.mainThread())
-               .subscribe {
-                   progressDialog.incrementProgressBy(1)
-               })
-
-            model.startSearching()
-                ?.subscribeBy {
-                    var intent = Intent(context, ChatActivity::class.java)
-                    startActivityForResult(intent, 101)
-                    progressDialog.hide()
-                   d.clear()
+        val fabChat = root.findViewById(R.id.fabChat) as FloatingActionButton
+        fabChat.setOnClickListener {
+            if (mAuth.isAuth()) {
+                progressDialog = ProgressDialog(it.context)
+                progressDialog.setMessage("Поиск чата")
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+                progressDialog.show()
+                progressDialog.max = 100
+                progressDialog.setOnCancelListener {
+                    model.onCancel()
+                    d!!.clear()
                 }
+
+                d.add(Observable
+                    .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe {
+                        progressDialog.incrementProgressBy(1)
+                    })
+
+                model.startSearching()
+                    ?.subscribeBy {
+                        var intent = Intent(context, ChatActivity::class.java)
+                        startActivityForResult(intent, 101)
+                        progressDialog.hide()
+                        d.clear()
+                    }
+            }
+            else {
+                val toast: Toast =
+                    Toast.makeText(requireActivity().baseContext,"Нет подключения к интернету.", Toast.LENGTH_SHORT)
+                    toast.show()
+            }
         }
 
         return root

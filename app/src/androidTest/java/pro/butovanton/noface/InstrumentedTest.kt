@@ -13,6 +13,7 @@ import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
 import pro.butovanton.noface.Models.UserApp
+import pro.butovanton.noface.di.App
 import pro.butovanton.noface.di.AppComponent
 import pro.butovanton.noface.di.AppModule
 import pro.butovanton.noface.di.DaggerAppComponent
@@ -84,6 +85,12 @@ class InstrumentedTest {
         if (!count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
         d.dispose()
         repo.disConnectFromChat()
+    }
+
+    @Test
+    fun  authRest() {
+        var mAuth = (App).appcomponent.getAuth()
+        assertTrue(mAuth.isAuth())
     }
 
  }

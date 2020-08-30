@@ -11,6 +11,7 @@ import android.os.Vibrator
 import android.preference.PreferenceManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -54,7 +55,9 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         setSupportActionBar(findViewById(R.id.toolbar))
 
        d = model.connectToRoom()
-           .subscribeBy({}, {
+           .subscribeBy({
+               Log.d((App).TAG, "оибка connect to Room")
+           }, {
                textViewEditmessage.text = "Собеседник покинул чат ..."
                // Нужно прописать выход из чата.
 

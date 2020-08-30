@@ -5,6 +5,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
+import pro.butovanton.noface.Auth
 import pro.butovanton.noface.Repo
 import pro.butovanton.noface.viewmodels.ChatViewModelFactory
 import pro.butovanton.noface.viewmodels.MainViewModel
@@ -33,5 +34,10 @@ class AppModule {
     @Provides
     fun myRef() : DatabaseReference {
         return FirebaseDatabase.getInstance().reference.child("chatrooms")
+    }
+
+    @Provides
+    fun myAuth() : Auth {
+        return  Auth()
     }
 }

@@ -10,12 +10,7 @@
     <string name="menu_rules">Правила</string>
     <string name="menu_dont_advert">Отключить рекламу</string>
     <string name="menu_setting">Настройки</string>
-    <string name="title_activity_chat">ChatActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="title_activity_chat">Чат</string>
 
     <string name="rules">Запрещено: "\n" - Обсуждать и распространять материалы эротического и порнографического содержания "\n" - Предлагать виртуальный секс и т.п. "\n" - Рассылать спам и рекламу "\n" - Продавать товары или услуги "\n" - Оскоорблять собеседника и угрожать "\n""\n"</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>

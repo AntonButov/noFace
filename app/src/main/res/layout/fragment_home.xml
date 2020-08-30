@@ -206,7 +206,7 @@
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fabChat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
@@ -223,10 +223,10 @@
         android:textColor="#fff"
         android:textSize="18dp"
         app:layout_anchorGravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/fab"
-        app:layout_constraintEnd_toEndOf="@+id/fab"
-        app:layout_constraintStart_toStartOf="@+id/fab"
-        app:layout_constraintTop_toTopOf="@+id/fab" />
+        app:layout_constraintBottom_toBottomOf="@+id/fabChat"
+        app:layout_constraintEnd_toEndOf="@+id/fabChat"
+        app:layout_constraintStart_toStartOf="@+id/fabChat"
+        app:layout_constraintTop_toTopOf="@+id/fabChat" />
 
     <TextView
         android:id="@+id/textViewCount"
@@ -234,7 +234,7 @@
         android:layout_height="18dp"
         android:layout_marginBottom="16dp"
         android:text="Число пользователей онлайн: 2000"
-        app:layout_constraintBottom_toTopOf="@+id/fab"
+        app:layout_constraintBottom_toTopOf="@+id/fabChat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

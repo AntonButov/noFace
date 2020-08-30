@@ -25,11 +25,12 @@ class MainViewModel() : ViewModel() {
     var userApp = UserApp()
 
     fun startSearching() : Single<String>? {
-        if (searching == null)
-            searching = repo.getRooms(user, userApp).doOnSuccess {
-                searching == null
-            }
-        return searching
+       // if (searching == null)
+    //        searching =
+                // {
+     //           searching == null
+            //}
+        return repo.getRooms(user, userApp)//.doOnSuccess
 
     }
 
