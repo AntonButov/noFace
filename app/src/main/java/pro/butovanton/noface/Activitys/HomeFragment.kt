@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.MainViewModel
+import pro.butovanton.noface.viewmodels.MainViewModelFactory
 import java.util.concurrent.TimeUnit
 
 
@@ -50,9 +51,7 @@ class HomeFragment : Fragment() {
     lateinit var disposable : Disposable
     var count = 2000
 
-    private val model: MainViewModel by viewModels {
-        (App).appcomponent.getMainViewModelFactory()
-    }
+    private val model: MainViewModel by viewModels()
 
     private var mAuth = (App).appcomponent.getAuth()
 

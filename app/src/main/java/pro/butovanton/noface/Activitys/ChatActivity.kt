@@ -9,9 +9,9 @@ import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.preference.PreferenceManager
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -20,6 +20,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rockerhieu.emojicon.EmojiconGridFragment
@@ -45,9 +48,7 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     private lateinit var viewManager: RecyclerView.LayoutManager
     lateinit var d : Disposable
 
-    private val model: ChatViewModel by viewModels {
-        (App).appcomponent.getChatViewModelFactory()
-    }
+    private val model: ChatViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -211,6 +212,22 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
             vibrateDevice(context)
         if (isSound())
             playSound(context)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+           menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.getItemId()) {
+            R.id.action_settings -> {
+                val navController = findNavController(R.id.nav_chat_fragment)
+                navController.navigate(R.id.nav_setting)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onDestroy() {

@@ -7,6 +7,7 @@ import com.google.firebase.database.*
 import com.google.firebase.database.core.operation.Merge
 import io.reactivex.rxjava3.annotations.NonNull
 import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.core.Flowable.just
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.Models.Room

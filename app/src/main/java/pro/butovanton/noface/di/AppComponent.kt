@@ -13,6 +13,4 @@ interface AppComponent {
 
    fun getRepo() : Repo
    fun getAuth() : Auth
-   fun getMainViewModelFactory() : MainViewModelFactory
-   fun getChatViewModelFactory() : ChatViewModelFactory
 }

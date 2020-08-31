@@ -16,22 +16,12 @@ import javax.inject.Singleton
 @Module
 class AppModule {
 
-    @Provides
-    fun provideMainViewModelFactory() : MainViewModelFactory {
-        return MainViewModelFactory()
-    }
-    @Provides
-    fun provideChatViewModelFactory() : ChatViewModelFactory {
-        return ChatViewModelFactory()
-    }
-
     @Singleton
     @Provides
     fun provideRepo() : Repo {
         return Repo(myRef())
     }
 
-    @Provides
     fun myRef() : DatabaseReference {
         return FirebaseDatabase.getInstance().reference.child("chatrooms")
     }

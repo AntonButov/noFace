@@ -15,6 +15,15 @@
         app:layout_anchor="@+id/constraintLayout"
         app:layout_anchorGravity="center">
 
+        <include
+            layout="@layout/content_chat"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
+
         <ImageView
             android:id="@+id/imogiButton"
             android:layout_width="50dp"
