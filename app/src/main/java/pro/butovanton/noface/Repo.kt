@@ -1,13 +1,9 @@
 package pro.butovanton.noface
 
-import android.os.Message
 import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
-import com.google.firebase.database.core.operation.Merge
-import io.reactivex.rxjava3.annotations.NonNull
 import io.reactivex.rxjava3.core.*
-import io.reactivex.rxjava3.core.Flowable.just
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.Models.Room
@@ -20,6 +16,8 @@ import javax.inject.Singleton
 class Repo(var ref : DatabaseReference) {
 
     var myRoom : Room? = null
+    lateinit var muser : User
+    lateinit var muserApp : UserApp
     var myRef : DatabaseReference? = null
     var myRefEmpty :  DatabaseReference? = null
     var refMessageIn : DatabaseReference? = null
@@ -62,19 +60,21 @@ class Repo(var ref : DatabaseReference) {
     }
 
     fun getRooms(user : User, userApp : UserApp) : Single<String> {
+        muser = user
+        muserApp = userApp
         return Single.create {find ->
-            findFreeRoom(user, userApp)
+            findFreeRoom()
                 .subscribeBy {
                     if (it.equals("guest"))
                        find.onSuccess("guest")
                     else
                         if (settingRoom == false)
-                            setRoom(user, userApp)
+                            setRoom()
                                   .map { if (deleting == true)  deleteRoom() }
                                   .filter { deleting == false }
-                                   .subscribeBy {
-                                        createRoom(user, userApp)
-                                            .subscribeBy { itb ->
+                                  .subscribeBy {
+                                        createRoom()
+                                            .subscribeBy {
                                                 setInOut(true)
                                              find.onSuccess("owner")
                                           }
@@ -84,7 +84,7 @@ class Repo(var ref : DatabaseReference) {
         }
     }
 
-    fun findFreeRoom(user: User, userApp: UserApp) : Single<String> {
+    fun findFreeRoom() : Single<String> {
         return Single.create({
             listenerRooms = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -121,7 +121,8 @@ class Repo(var ref : DatabaseReference) {
             var resultRoom : Room? = null
             for (data in snapshot.children) {
                 var room = data.getValue(Room::class.java)
-                if (room!!.empty && room.message1.end == false && room.message2.end == false) {
+                if (room!!.empty && room.message1.end == false && room.message2.end == false &&
+                   isUserValid(room.user1, room.userApp!!))     {
                     resultRoom = room
                 break
                 }
@@ -129,10 +130,23 @@ class Repo(var ref : DatabaseReference) {
         return resultRoom
         }
 
-fun setRoom(user: User, userApp: UserApp) : Single<Boolean> {
+    fun isUserValid(user: User, userApp: UserApp) : Boolean {
+    return  userApp.gender == muser.gender &&
+            muserApp.gender == user.gender &&
+            isUserValidAge(user, userApp)
+    }
+
+    fun isUserValidAge(user: User, userApp: UserApp) : Boolean {
+    var res = true
+    if (muser.gender == 3) res = true
+    else res = muserApp.age[user.age] && userApp.age[muser.age]
+    return res
+    }
+
+fun setRoom() : Single<Boolean> {
     settingRoom = true
     return Single.create({
-        setRoom(Room(getKey(), user, userApp))
+        setRoom(Room(getKey(), muser, muserApp))
         Log.d(TAG, "Room: " + myRoom!!.key.toString())
         saveRoom(myRoom!!)
             .addOnSuccessListener {  sucses ->
@@ -169,7 +183,7 @@ fun setRoom(user: User, userApp: UserApp) : Single<Boolean> {
     }
 
 
-    fun createRoom(user : User, userApp : UserApp) : Single<Boolean> {
+    fun createRoom() : Single<Boolean> {
         return Single.create {
             listenerEmpty = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -186,8 +200,8 @@ fun setRoom(user: User, userApp: UserApp) : Single<Boolean> {
                     Log.d(TAG, "onCanceled firebase")
                 }
             }
-               myRefEmpty!!.setValue(true).addOnSuccessListener {//открываем комнату
-                   myRefEmpty!!.addValueEventListener(listenerEmpty as ValueEventListener)
+               myRefEmpty!!.setValue(true).addOnSuccessListener {  //открываем комнату
+               myRefEmpty!!.addValueEventListener(listenerEmpty as ValueEventListener)
                }
 
         }

@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
     lateinit var b35_2 : Button
 
     lateinit var progressDialog : ProgressDialog
-    var d = CompositeDisposable()
+    var disposableDialogCount = CompositeDisposable()
     lateinit var disposable : Disposable
     var count = 2000
 
@@ -188,8 +188,6 @@ class HomeFragment : Fragment() {
             b35_1.setBackgroundResource(R.drawable.buttons_focus)
         }
 
-        performClickAge1()
-
         b18_2.setOnClickListener {
             model.userApp.age[0] = !model.userApp.age[0]
             performClickAge2()
@@ -215,7 +213,10 @@ class HomeFragment : Fragment() {
             performClickAge2()
         }
 
+        b18_2.performClick()
+        performClickAge1()
         performClickAge2()
+        bAnyGender1.performClick()
 
         val fabChat = root.findViewById(R.id.fabChat) as FloatingActionButton
         fabChat.setOnClickListener {
@@ -227,10 +228,10 @@ class HomeFragment : Fragment() {
                 progressDialog.max = 100
                 progressDialog.setOnCancelListener {
                     model.onCancel()
-                    d!!.clear()
+                    disposableDialogCount!!.clear()
                 }
 
-                d.add(Observable
+                disposableDialogCount.add(Observable
                     .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -243,7 +244,7 @@ class HomeFragment : Fragment() {
                         var intent = Intent(context, ChatActivity::class.java)
                         startActivityForResult(intent, 101)
                         progressDialog.hide()
-                        d.clear()
+                        disposableDialogCount.clear()
                     }
             }
             else {
@@ -320,7 +321,7 @@ class HomeFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         model.onCancel()
-        d.dispose()
+        disposableDialogCount.dispose()
     }
 
     fun performClickAge2() {

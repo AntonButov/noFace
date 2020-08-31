@@ -13,6 +13,7 @@ class Auth {
     fun isAuth() : Boolean {
         if (mAuth.currentUser == null)
                 mAuth.signInAnonymously()
+
        return mAuth.currentUser != null
     }
 }
