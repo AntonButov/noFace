@@ -1,18 +1,9 @@
 package pro.butovanton.noface.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import io.reactivex.rxjava3.annotations.NonNull
-import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.kotlin.Observables
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
 import pro.butovanton.noface.Models.UserApp
-import pro.butovanton.noface.Repo
 import pro.butovanton.noface.di.App
 
 
@@ -25,18 +16,19 @@ class MainViewModel() : ViewModel() {
     var userApp = UserApp()
 
     fun startSearching() : Single<String>? {
-       // if (searching == null)
-    //        searching =
-                // {
-     //           searching == null
-            //}
-        return repo.getRooms(user, userApp)//.doOnSuccess
+        repo.cansel = false
+        if (searching == null)
+          searching = repo.getRooms(user, userApp)
+              .doOnSuccess {
+                searching == null
+               }
+
+        return searching
 
     }
 
     fun onCancel() {
         repo.onCancel()
-
     }
 
  }

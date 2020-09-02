@@ -4,11 +4,11 @@ import android.text.Editable
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
-class Massage() {
+open class Massage() {
 
     var time: Long = 0
     var text: String = ""
-    var my = true
+protected    var my = true
     var end = false
     var edit = false
 

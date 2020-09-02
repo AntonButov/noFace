@@ -2,18 +2,18 @@ package pro.butovanton.noface
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.rxjava3.kotlin.subscribeBy
-
+import io.reactivex.rxjava3.subscribers.TestSubscriber
+import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
-import org.junit.Before
-import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
 import pro.butovanton.noface.Models.UserApp
 import pro.butovanton.noface.di.App
+import pro.butovanton.noface.di.App.Companion.TAG
 import pro.butovanton.noface.di.AppComponent
 import pro.butovanton.noface.di.AppModule
 import pro.butovanton.noface.di.DaggerAppComponent
@@ -24,7 +24,8 @@ import java.util.concurrent.TimeUnit
 class InstrumentedTest {
 
     lateinit var testAppomponent: AppComponent
-    lateinit var repo : Repo
+    lateinit var repoTest : RepoTest
+    lateinit var mAuth : Auth
 
     val TESTID = "testId"
 
@@ -34,7 +35,8 @@ class InstrumentedTest {
             .builder()
             .appModule(AppModule())
             .build()
-    repo = testAppomponent.getRepo()
+    repoTest = testAppomponent.getRepoTest()
+    mAuth =  (App).appcomponent.getAuth()
     }
 
      @Test
@@ -42,11 +44,11 @@ class InstrumentedTest {
         var count = CountDownLatch(1)
         var user = User(2, 0)
         var userApp = UserApp()
-        var room = Room(TESTID, user,userApp)
-
-        repo.setRoom(room)
-        repo.setInOut(true)
-        repo.saveRoom(room)
+        var room = Room(repoTest.getKey() + "-" + TESTID, user, userApp)
+        room.empty = true
+        repoTest.setRoom(room)
+        repoTest.setInOut(true)
+        repoTest.saveRoom(room)
             .addOnCompleteListener{
                 assertTrue(true)
                 count.countDown()
@@ -55,41 +57,51 @@ class InstrumentedTest {
     }
 
     @Test
-    fun getRoomChield() {
-        var count = CountDownLatch(1)
-        var d = repo.getRooms(User(),UserApp() )
-            .subscribeBy ({  assertTrue(false)
-                } ,
-                {
-                    count.countDown()
-                }
-            )
-       if (!count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
-        d.dispose()
+    fun saveRooms() {
+        for (i in 1 .. 100)
+            saveRoom()
     }
 
     @Test
-    fun connectToChat() {
-       saveRoom()
-       var count = CountDownLatch(1)
-       var d = repo.toChat()
-           .subscribeBy (
-                {},{
-                    count.countDown()
-                },{
-                    assertTrue(it.text.equals(""))
-            })
-        var messageEnd = Massage()
-        messageEnd.end = true
-        repo.sendMessage(message = messageEnd)
-        if (!count.await(1, TimeUnit.MINUTES)) throw Exception("error getRoom")
-        d.dispose()
-        repo.disConnectFromChat()
+    fun findFreeRooms() {
+        repoTest.muser = User()
+        repoTest.muserApp = UserApp()
+       var count =  CountDownLatch(1)
+       repoTest.findFreeRoom2()
+           .doOnSuccess { Log.e(TAG, "Find: " + it ) }
+           .subscribeBy {
+            assertTrue(it != null)
+            count.countDown()
+           }
+           count.await(1,TimeUnit.MINUTES)
+    }
+
+    @Test
+    fun getRoomsAndCreate() {
+        var count =  CountDownLatch(1)
+        repoTest.getRooms(User(), UserApp())
+            .subscribeBy {
+                assertTrue(it != null)
+                Log.e(TAG, "LoadedAndCreate: " + it )
+                count.countDown()
+            }
+        count.await(1,TimeUnit.MINUTES)
+    }
+
+    @Test
+    fun deleteAll() {
+        var count =  CountDownLatch(1)
+        repoTest.getRoomsList()
+            .doOnNext {
+                    repoTest.deleteRoom(it.key!!)
+            }
+            .doOnComplete { count.countDown() }
+            .subscribe()
+    count.await(1,TimeUnit.MINUTES)
     }
 
     @Test
     fun  authRest() {
-        var mAuth = (App).appcomponent.getAuth()
         assertTrue(mAuth.isAuth())
     }
 

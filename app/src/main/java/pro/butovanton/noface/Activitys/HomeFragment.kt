@@ -228,7 +228,7 @@ class HomeFragment : Fragment() {
                 progressDialog.max = 100
                 progressDialog.setOnCancelListener {
                     model.onCancel()
-                    disposableDialogCount!!.clear()
+                    disposableDialogCount.clear()
                 }
 
                 disposableDialogCount.add(Observable
@@ -239,13 +239,13 @@ class HomeFragment : Fragment() {
                         progressDialog.incrementProgressBy(1)
                     })
 
-                model.startSearching()
+               disposableDialogCount.add(model.startSearching()
                     ?.subscribeBy {
-                        var intent = Intent(context, ChatActivity::class.java)
-                        startActivityForResult(intent, 101)
-                        progressDialog.hide()
-                        disposableDialogCount.clear()
-                    }
+                            var intent = Intent(context, ChatActivity::class.java)
+                            startActivityForResult(intent, 101)
+                            progressDialog.hide()
+                            disposableDialogCount.clear()
+                    })
             }
             else {
                 val toast: Toast =

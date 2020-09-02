@@ -18,7 +18,6 @@ package pro.butovanton.noface.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import pro.butovanton.noface.Repo
 
 class ChatViewModelFactory() : ViewModelProvider.Factory {
 

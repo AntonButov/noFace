@@ -18,6 +18,7 @@ class Room() {
         this.user1 = user1
         this.userApp = userApp
     }
+
 }
 
 

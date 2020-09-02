@@ -13,7 +13,7 @@ import pro.butovanton.noface.di.App.Companion.TAG
 import javax.inject.Singleton
 
 @Singleton
-class Repo(var ref : DatabaseReference) {
+open class Repo(open var ref : DatabaseReference) {
 
     var myRoom : Room? = null
     lateinit var muser : User
@@ -29,6 +29,9 @@ class Repo(var ref : DatabaseReference) {
     var deleting = false
     var listenerRoomsDispose = false
     var settingRoom = false
+    var cansel = false
+
+    lateinit var listenerRoomsList: ValueEventListener;
 
     fun saveRoom(room: Room?) : Task<Void> {
         return ref
@@ -62,58 +65,76 @@ class Repo(var ref : DatabaseReference) {
     fun getRooms(user : User, userApp : UserApp) : Single<String> {
         muser = user
         muserApp = userApp
-        return Single.create {find ->
-            findFreeRoom()
+        cansel = false
+        return Single.create {findRoom ->
+            findFreeRoom2()
                 .subscribeBy {
                     if (it.equals("guest"))
-                       find.onSuccess("guest")
+                            findRoom.onSuccess(it)
                     else
-                        if (settingRoom == false)
-                            setRoom()
+                        if (cansel == false)
+                            setNewRoom()
                                   .map { if (deleting == true)  deleteRoom() }
                                   .filter { deleting == false }
                                   .subscribeBy {
-                                        createRoom()
+                                      if (cansel == false)
+                                        subscribeRoom()
                                             .subscribeBy {
-                                                setInOut(true)
-                                             find.onSuccess("owner")
+                                             setInOut(true)
+                                             findRoom.onSuccess("owner")
                                           }
+                                      else findRoom.onSuccess("stoping")
                                   }
-                    Log.d(TAG,it)
+                       else findRoom.onSuccess("stoping")
             }
         }
     }
 
-    fun findFreeRoom() : Single<String> {
-        return Single.create({
-            listenerRooms = object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d(TAG, "listenerRooms")
-                deleteDesertedRoom(snapshot)
-                if (myRoom == null && listenerRoomsDispose == false) {
-                    var room = freeRoomFind(snapshot)
-                    if (room != null ) {
-                        setRoom(room)
-                        setInOut(false)
-                        it.onSuccess("guest")
-                        myRefEmpty!!.setValue(false)
-                        listenerRoomsDispose = true
-                    } else {
-                        it.onSuccess("owner")
+    fun findFreeRoom2() : Single<String> {
+        return Single.create({  find ->
+            getRoomsList()
+                .doOnNext { if (it.message1.end || it.message2.end)
+                                  deleteRoom(it.key!!)  }
+                .filter { myRoom == null &&
+                          it.empty &&
+                          it.message1.end == false &&
+                          it.message2.end == false &&
+                          isUserValid(it.user1, it.userApp!!)}
+                .take(1)
+                .subscribeBy({} , {
+                   if (myRoom != null) {
+                       setInOut(false)
+                       myRefEmpty!!.setValue(false)
+                       find.onSuccess("guest")
+                   }
+                   else find.onSuccess("dontFind")
+               } , {
+                    setRoom(it)
+                    Log.d(TAG, "finded " + it.key) })
+             })
+    }
 
+    fun getRoomsList() : Observable<Room> {
+        return Observable.create ({
+            listenerRoomsList = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.d(TAG, "listenerRooms")
+                    for (data in snapshot.children) {
+                        var room = data.getValue(Room::class.java)
+                        it.onNext(room)
                     }
+                    it.onComplete()
+                    ref.removeEventListener(listenerRoomsList)
                 }
-                ref.removeEventListener(listenerRooms!!)
-                listenerRoomsDispose = true
+
+                override fun onCancelled(error: DatabaseError) {
+                    it.onError(Throwable("FireBase not loaded"))
+                    ref.removeEventListener(listenerRooms!!)
+                }
             }
-            override fun onCancelled(error: DatabaseError) {
-                it.onError(Throwable("FireBase not loaded"))
-                ref.removeEventListener(listenerRooms!!)
-            }
+            ref.addValueEventListener(listenerRoomsList as ValueEventListener)
+
         }
-    ref.addValueEventListener(listenerRooms as ValueEventListener)
-    listenerRoomsDispose = false
-    }
         )
     }
 
@@ -138,12 +159,12 @@ class Repo(var ref : DatabaseReference) {
 
     fun isUserValidAge(user: User, userApp: UserApp) : Boolean {
     var res = true
-    if (muser.gender == 3) res = true
+    if (muser.gender == 2) res = true
     else res = muserApp.age[user.age] && userApp.age[muser.age]
     return res
     }
 
-fun setRoom() : Single<Boolean> {
+fun setNewRoom() : Single<Boolean> {
     settingRoom = true
     return Single.create({
         setRoom(Room(getKey(), muser, muserApp))
@@ -183,7 +204,7 @@ fun setRoom() : Single<Boolean> {
     }
 
 
-    fun createRoom() : Single<Boolean> {
+    fun subscribeRoom() : Single<Boolean> {
         return Single.create {
             listenerEmpty = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -232,10 +253,10 @@ fun setRoom() : Single<Boolean> {
         if (myRefEmpty != null && listenerEmpty != null)
              myRefEmpty!!
                       .removeEventListener(listenerEmpty!!)
-        if (myRef != null)
-               myRef!!.removeValue().addOnSuccessListener {
-                   deleting = false
-               }
+        if (myRef != null) {
+            myRef!!.removeValue()
+            deleting = false
+        }
     }
 
     fun deleteRoom( key : String) {
@@ -243,6 +264,7 @@ fun setRoom() : Single<Boolean> {
     }
 
     fun onCancel() {
+        cansel = true
         if ( refMessageIn != null && listenerEmpty != null) {
             refMessageIn!!.removeEventListener(listenerEmpty!!)
         }
@@ -254,6 +276,39 @@ fun setRoom() : Single<Boolean> {
     fun sendMessage(message: Massage) {
         refMessageOut!!.setValue(message)
 
+    }
+
+    fun findFreeRoom() : Single<String> {
+        return Single.create({
+            listenerRooms = object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.d(TAG, "listenerRooms")
+                    deleteDesertedRoom(snapshot)
+                    if (myRoom == null && listenerRoomsDispose == false) {
+                        var room = freeRoomFind(snapshot)
+                        if (room != null ) {
+                            setRoom(room)
+                            setInOut(false)
+                            it.onSuccess("guest")
+                            myRefEmpty!!.setValue(false)
+                            listenerRoomsDispose = true
+                        } else {
+                            it.onSuccess("dontFind")
+
+                        }
+                    }
+                    ref.removeEventListener(listenerRooms!!)
+                    listenerRoomsDispose = true
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    it.onError(Throwable("FireBase not loaded"))
+                    ref.removeEventListener(listenerRooms!!)
+                }
+            }
+            ref.addValueEventListener(listenerRooms as ValueEventListener)
+            listenerRoomsDispose = false
+        }
+        )
     }
 
 }
