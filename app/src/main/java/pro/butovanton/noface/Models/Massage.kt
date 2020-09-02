@@ -8,7 +8,7 @@ open class Massage() {
 
     var time: Long = 0
     var text: String = ""
-protected    var my = true
+    var my = true
     var end = false
     var edit = false
 

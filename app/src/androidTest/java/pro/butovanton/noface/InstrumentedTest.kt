@@ -37,6 +37,9 @@ class InstrumentedTest {
             .build()
     repoTest = testAppomponent.getRepoTest()
     mAuth =  (App).appcomponent.getAuth()
+
+    var repo = (App).appcomponent.getRepo()
+    var repo1 = (App).appcomponent.getRepo()
     }
 
      @Test
