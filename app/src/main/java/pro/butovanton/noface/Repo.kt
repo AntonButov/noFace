@@ -30,6 +30,7 @@ open class Repo(open var ref : DatabaseReference) {
     var listenerRoomsDispose = false
     var settingRoom = false
     var cansel = false
+    var finding = false
 
     lateinit var listenerRoomsList: ValueEventListener;
 
@@ -65,33 +66,36 @@ open class Repo(open var ref : DatabaseReference) {
     fun getRooms(user : User, userApp : UserApp) : Single<String> {
         muser = user
         muserApp = userApp
-        cansel = false
         return Single.create {findRoom ->
+            if (finding == false)
             findFreeRoom2()
                 .subscribeBy {
                     if (it.equals("guest"))
                             findRoom.onSuccess(it)
                     else
-                        if (cansel == false)
+                        if (cansel) {findRoom.onSuccess("Stoping")
+                            cansel = false }
+                        else
                             setNewRoom()
                                   .map { if (deleting == true)  deleteRoom() }
                                   .filter { deleting == false }
                                   .subscribeBy {
-                                      if (cansel == false)
-                                        subscribeRoom()
+                                      if (cansel) {findRoom.onSuccess("Stoping")
+                                          cansel = false }
+                                      else
+                                      subscribeRoom()
                                             .subscribeBy {
                                              setInOut(true)
                                              findRoom.onSuccess("owner")
                                           }
-                                      else findRoom.onSuccess("stoping")
                                   }
-                       else findRoom.onSuccess("stoping")
-            }
+              }
         }
     }
 
     fun findFreeRoom2() : Single<String> {
         Log.d(TAG, "Finding")
+        finding = true
         return Single.create({  find ->
             getRoomsList()
                 .doOnNext { if (it.message1.end || it.message2.end)
@@ -109,6 +113,7 @@ open class Repo(open var ref : DatabaseReference) {
                        find.onSuccess("guest")
                    }
                    else find.onSuccess("dontFind")
+                   finding = false
                } , {
                     setRoom(it)
                     Log.d(TAG, "finded " + it.key) })
@@ -138,19 +143,6 @@ open class Repo(open var ref : DatabaseReference) {
         }
         )
     }
-
-        fun freeRoomFind(snapshot: DataSnapshot) : Room? {
-            var resultRoom : Room? = null
-            for (data in snapshot.children) {
-                var room = data.getValue(Room::class.java)
-                if (room!!.empty && room.message1.end == false && room.message2.end == false &&
-                   isUserValid(room.user1, room.userApp!!))     {
-                    resultRoom = room
-                break
-                }
-            }
-        return resultRoom
-        }
 
     fun isUserValid(user: User, userApp: UserApp) : Boolean {
     return  isUserValidGender(user, userApp) &&

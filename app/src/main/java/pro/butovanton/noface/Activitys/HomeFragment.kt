@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
+import pro.butovanton.noface.di.App.Companion.TAG
 import pro.butovanton.noface.viewmodels.MainViewModel
 import pro.butovanton.noface.viewmodels.MainViewModelFactory
 import java.util.concurrent.TimeUnit
@@ -48,6 +50,7 @@ class HomeFragment : Fragment() {
 
     lateinit var progressDialog : ProgressDialog
     var disposableDialogCount = CompositeDisposable()
+    var disposableSearchigRoom = CompositeDisposable()
     lateinit var disposable : Disposable
     var count = 2000
 
@@ -239,12 +242,16 @@ class HomeFragment : Fragment() {
                         progressDialog.incrementProgressBy(1)
                     })
 
-               disposableDialogCount.add(model.startSearching()
-                    ?.subscribeBy {
-                            var intent = Intent(context, ChatActivity::class.java)
-                            startActivityForResult(intent, 101)
-                            progressDialog.hide()
-                            disposableDialogCount.clear()
+                    disposableSearchigRoom.add(model.startSearching()
+                       ?.subscribeBy {
+                           if (it.equals("guest") || it.equals("owner")) {
+                               var intent = Intent(context, ChatActivity::class.java)
+                               startActivityForResult(intent, 101)
+                           }
+                           progressDialog.hide()
+                           disposableSearchigRoom.clear()
+                           disposableDialogCount.clear()
+                    Log.d(TAG, it);
                     })
             }
             else {
