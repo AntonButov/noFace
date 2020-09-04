@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.iid.FirebaseInstanceId
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -24,7 +25,6 @@ import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.di.App.Companion.TAG
 import pro.butovanton.noface.viewmodels.MainViewModel
-import pro.butovanton.noface.viewmodels.MainViewModelFactory
 import java.util.concurrent.TimeUnit
 
 
@@ -243,20 +243,24 @@ class HomeFragment : Fragment() {
                     })
 
                     disposableSearchigRoom.add(model.startSearching()
-                       ?.subscribeBy {
-                           if (it.equals("guest") || it.equals("owner")) {
-                               var intent = Intent(context, ChatActivity::class.java)
-                               startActivityForResult(intent, 101)
-                           }
-                           progressDialog.hide()
-                           disposableSearchigRoom.clear()
-                           disposableDialogCount.clear()
-                    Log.d(TAG, it);
-                    })
+                        ?.subscribeBy {
+                            if (it.equals("guest") || it.equals("owner")) {
+                                var intent = Intent(context, ChatActivity::class.java)
+                                startActivityForResult(intent, 101)
+                            }
+                            progressDialog.hide()
+                            disposableSearchigRoom.clear()
+                            disposableDialogCount.clear()
+                            Log.d(TAG, it);
+                        })
             }
             else {
                 val toast: Toast =
-                    Toast.makeText(requireActivity().baseContext,"Нет подключения к интернету.", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireActivity().baseContext,
+                        "Нет подключения к интернету.",
+                        Toast.LENGTH_SHORT
+                    )
                     toast.show()
             }
         }
@@ -357,6 +361,7 @@ class HomeFragment : Fragment() {
         else
             b35_2.setBackgroundResource(R.drawable.buttons)
     }
+
 
 }
 

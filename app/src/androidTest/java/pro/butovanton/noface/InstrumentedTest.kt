@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subscribers.TestSubscriber
+import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -19,6 +20,7 @@ import pro.butovanton.noface.di.AppModule
 import pro.butovanton.noface.di.DaggerAppComponent
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.MILLISECONDS
 
 @RunWith(AndroidJUnit4::class)
 class InstrumentedTest {
@@ -42,6 +44,8 @@ class InstrumentedTest {
     var repo1 = (App).appcomponent.getRepo()
     }
 
+
+
      @Test
     fun saveRoom() {
         var count = CountDownLatch(1)
@@ -61,7 +65,7 @@ class InstrumentedTest {
 
     @Test
     fun saveRooms() {
-        for (i in 1 .. 100)
+        for (i in 1 .. 10)
             saveRoom()
     }
 
@@ -88,10 +92,15 @@ class InstrumentedTest {
                 Log.e(TAG, "LoadedAndCreate: " + it )
                 count.countDown()
             }
-        count.await(1,TimeUnit.MINUTES)
+        Thread.sleep(5000)
+
+        repoTest.getRooms(User(), UserApp()).subscribe()
+
+      if (!count.await(1,TimeUnit.MINUTES)) {
+          Throwable(" Exep ")}
     }
 
-    @Test
+    @After
     fun deleteAll() {
         var count =  CountDownLatch(1)
         repoTest.getRoomsList()
@@ -103,7 +112,6 @@ class InstrumentedTest {
     count.await(1,TimeUnit.MINUTES)
     }
 
-    @Test
     fun  authRest() {
         assertTrue(mAuth.isAuth())
     }
