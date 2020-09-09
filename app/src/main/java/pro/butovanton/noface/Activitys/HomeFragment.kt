@@ -12,6 +12,9 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.MobileAds
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.iid.FirebaseInstanceId
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -58,7 +61,6 @@ class HomeFragment : Fragment() {
 
     private var mAuth = (App).appcomponent.getAuth()
 
-    @SuppressLint("RestrictedApi")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -224,6 +226,7 @@ class HomeFragment : Fragment() {
         val fabChat = root.findViewById(R.id.fabChat) as FloatingActionButton
         fabChat.setOnClickListener {
             if (mAuth.isAuth()) {
+                (activity as MainActivity).showAdwert()
                 progressDialog = ProgressDialog(it.context)
                 progressDialog.setMessage("Поиск чата")
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)

@@ -1,5 +1,6 @@
 package pro.butovanton.noface.Activitys
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Point
 import android.media.AudioManager
@@ -20,8 +21,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +35,9 @@ import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.ChatViewModel
 import java.util.*
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds
 
 
 class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
