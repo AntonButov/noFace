@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fon1"
     tools:context=".Activitys.HomeFragment">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -26,8 +28,8 @@
                 android:id="@+id/age1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="Ваш возраст" />
+                android:text="Ваш возраст"
+                android:textSize="16dp" />
 
             <Button
                 android:id="@+id/until18_1"
@@ -75,8 +77,8 @@
                 android:id="@+id/age2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="Возраст собеседника" />
+                android:text="Возраст собеседника"
+                android:textSize="16dp" />
 
             <Button
                 android:id="@+id/until18_2"
@@ -117,8 +119,8 @@
                 android:id="@+id/mabe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="Можно несколько" />
+                android:text="Можно несколько"
+                android:textSize="16dp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -205,28 +207,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabChat"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:elevation="6dp"
-        android:text="Начать чат"
-        android:textColor="#fff"
-        android:textSize="18dp"
-        app:layout_anchorGravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/fabChat"
-        app:layout_constraintEnd_toEndOf="@+id/fabChat"
-        app:layout_constraintStart_toStartOf="@+id/fabChat"
-        app:layout_constraintTop_toTopOf="@+id/fabChat" />
 
     <TextView
         android:id="@+id/textViewCount"
@@ -234,7 +214,22 @@
         android:layout_height="18dp"
         android:layout_marginBottom="16dp"
         android:text="Число пользователей онлайн: 2000"
-        app:layout_constraintBottom_toTopOf="@+id/fabChat"
+        app:layout_constraintBottom_toTopOf="@+id/buttonChat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonChat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/buttonchat"
+        android:text="Начать чать"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     var notifyId = 0
     var notifyCount = 0
 
+    override fun onCreate() {
+        super.onCreate()
+        Log.d(TAG, "MyFirebaseMessagingService created")
+    }
+
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "MyFirebaseMessagingService destroed")
+    }
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         Log.d(TAG, "onMessageReceived")
@@ -37,7 +49,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         builder = NotificationCompat.Builder(this, CHANNEL_ID)
         builder.setChannelId(CHANNEL_ID)
             .setSmallIcon(R.drawable.chat_bubble_outline_24px)
-            .setColor(resources.getColor(R.color.whiteGray))
             .setNumber(notifyCount++)
             .setContentText(remoteMessage.notification!!.body)
             .setContentTitle(title)

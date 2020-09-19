@@ -76,13 +76,13 @@ class MainActivity : AppCompatActivity() {
         MobileAds.initialize(this)
 
         mInterstitialAd = InterstitialAd(this)
-  //      mInterstitialAd!!.adUnitId = "ca-app-pub-8158565231911074/5118511494"
-        mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+        mInterstitialAd!!.adUnitId = "ca-app-pub-8158565231911074/5118511494"
+            //    mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
         mInterstitialAd!!.loadAd(AdRequest.Builder().build())
 
         mInterstitialAd!!.adListener = object: AdListener() {
             override fun onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
+                Log.d((App).TAG, "AdLoad ")
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -110,10 +110,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showAdwert() {
-        if (mInterstitialAd != null && mInterstitialAd!!.isLoaded()) {
+
+        if (mInterstitialAd != null
+            && mInterstitialAd!!.isLoaded()
+        )
+        {
             mInterstitialAd!!.show();
         } else {
-            Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
+   //         Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
            // startGame();
         }
     }

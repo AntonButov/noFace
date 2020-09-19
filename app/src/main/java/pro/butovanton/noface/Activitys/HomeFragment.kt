@@ -223,7 +223,7 @@ class HomeFragment : Fragment() {
         performClickAge2()
         bAnyGender1.performClick()
 
-        val fabChat = root.findViewById(R.id.fabChat) as FloatingActionButton
+        val fabChat = root.findViewById(R.id.buttonChat) as Button
         fabChat.setOnClickListener {
             if (mAuth.isAuth()) {
                 (activity as MainActivity).showAdwert()

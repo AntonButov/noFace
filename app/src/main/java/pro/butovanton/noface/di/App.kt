@@ -6,7 +6,7 @@ class App : Application() {
 
     companion object {
 
-        val TAG = "ANONIM_CHAN"
+        val TAG = "ANONIM_CHAT"
 
         @JvmStatic
         lateinit var appcomponent: AppComponent
