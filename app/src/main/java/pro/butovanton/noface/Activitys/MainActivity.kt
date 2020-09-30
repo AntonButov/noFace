@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        //toolbar.setupWithNavController(navController, appBarConfiguration)
-
         var packageInfo: PackageInfo? = null
         try {
             packageInfo = packageManager.getPackageInfo(packageName, 0)

@@ -1,6 +1,7 @@
 package pro.butovanton.noface.Activitys
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Point
 import android.media.AudioManager
@@ -18,6 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
@@ -227,6 +229,27 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onBackPressed() {
+        var firstDialog =  AlertDialog.Builder(this)
+            .setTitle("Выход из чата.")
+            .setMessage("Вы хотите покинуть чат?")
+            .setPositiveButton("Нет.", object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+
+                }
+            })
+            .setNegativeButton("Да.", object : DialogInterface.OnClickListener {
+                override fun onClick(dialog: DialogInterface?, which: Int) {
+                    finish()
+                }
+            })
+            .create()
+        firstDialog.setOnCancelListener {
+            finish()
+        }
+        firstDialog.show()
     }
 
     override fun onDestroy() {
