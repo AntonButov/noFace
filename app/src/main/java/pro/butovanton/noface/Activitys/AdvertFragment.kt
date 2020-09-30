@@ -17,7 +17,7 @@ class AdvertFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_advert, container, false)
-        val textView: TextView = root.findViewById(R.id.text_gallery)
+
         return root
     }
 }

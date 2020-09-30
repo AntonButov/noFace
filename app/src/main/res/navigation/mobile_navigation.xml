@@ -15,17 +15,19 @@
         android:id="@+id/nav_home"
         android:name="pro.butovanton.noface.Activitys.HomeFragment"
         android:label="@string/Chat"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+    </fragment>
 
     <fragment
         android:id="@+id/nav_advert"
         android:name="pro.butovanton.noface.Activitys.AdvertFragment"
-        android:label=""
+        android:label="@string/Chat"
         tools:layout="@layout/fragment_advert" />
 
     <fragment
         android:id="@+id/nav_setting"
         android:name="pro.butovanton.noface.Activitys.SettingFragment"
-        android:label=""
-        tools:layout="@layout/fragment_rules" />
+        android:label="@string/Chat"
+        tools:layout="@layout/fragment_rules" >
+    </fragment>
 </navigation>

@@ -43,11 +43,13 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_advert, R.id.nav_setting
+                R.id.nav_home
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        //toolbar.setupWithNavController(navController, appBarConfiguration)
 
         var packageInfo: PackageInfo? = null
         try {
@@ -133,5 +135,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+    }
 }
 
