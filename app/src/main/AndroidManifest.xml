@@ -12,13 +12,15 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activitys.SettingsActivity"
+            android:label="Настройки" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/chat_bubble_outline_24px" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-8158565231911074~2301325206"/>
+            android:value="ca-app-pub-8158565231911074~2301325206" />
 
         <service
             android:name=".MyFirebaseMessagingService"

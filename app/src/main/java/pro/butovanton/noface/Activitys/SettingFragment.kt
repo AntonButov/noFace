@@ -22,7 +22,7 @@ class SettingFragment : PreferenceFragmentCompat() {
     var onPause = false
 
     var mListener =
-        OnSharedPreferenceChangeListener { sharedPreferences, key ->
+        OnSharedPreferenceChangeListener { shared, key ->
             Log.d(
                 TAG,
                 "A preference has been changed"
@@ -33,17 +33,12 @@ class SettingFragment : PreferenceFragmentCompat() {
             }
         }
 
-    @SuppressLint("RestrictedApi")
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.pref, rootKey)
 
              shared = PreferenceManager.getDefaultSharedPreferences(context)
         shared.registerOnSharedPreferenceChangeListener(mListener)
 
-     //   val actionBar = (activity as AppCompatActivity?)?.supportActionBar
-     //   actionBar?.dispatchMenuVisibilityChanged(false)
-     //   actionBar?.setDisplayHomeAsUpEnabled(true)
-     //   actionBar?.setDisplayShowHomeEnabled(true)
     }
 
     override fun onResume() {

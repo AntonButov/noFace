@@ -1,7 +1,7 @@
 package pro.butovanton.noface.Activitys
 
-import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Point
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -21,7 +21,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.rockerhieu.emojicon.EmojiconGridFragment
@@ -35,9 +34,6 @@ import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.viewmodels.ChatViewModel
 import java.util.*
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds
 
 
 class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
@@ -224,8 +220,9 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.getItemId()) {
             R.id.action_settings -> {
-                val navController = findNavController(R.id.nav_chat_fragment)
-                navController.navigate(R.id.nav_setting)
+                val i = Intent()
+                i.setClass(this, SettingsActivity::class.java)
+                startActivityForResult(i, 0)
                 true
             }
             else -> super.onOptionsItemSelected(item)
