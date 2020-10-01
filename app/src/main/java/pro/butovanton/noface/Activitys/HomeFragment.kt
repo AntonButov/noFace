@@ -1,6 +1,6 @@
 package pro.butovanton.noface.Activitys
 
-import android.annotation.SuppressLint
+import android.app.Dialog
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
@@ -12,11 +12,6 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.ads.MobileAds
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.iid.FirebaseInstanceId
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -227,11 +222,14 @@ class HomeFragment : Fragment() {
         fabChat.setOnClickListener {
             if (mAuth.isAuth()) {
                 (activity as MainActivity).showAdwert()
-                progressDialog = ProgressDialog(it.context)
+                progressDialog = ProgressDialog(context)
                 progressDialog.setMessage("Поиск чата")
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-                progressDialog.show()
+
                 progressDialog.max = 100
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+//                progressDialog.setIndeterminate(true);
+
+                progressDialog.show()
                 progressDialog.setOnCancelListener {
                     model.onCancel()
                     disposableDialogCount.clear()
@@ -242,7 +240,9 @@ class HomeFragment : Fragment() {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
-                        progressDialog.incrementProgressBy(1)
+                        progressDialog.setIndeterminate(false)
+                        progressDialog.incrementProgressBy(10)
+                        //     progressDialog.progress = it.toInt()
                     })
 
                     disposableSearchigRoom.add(model.startSearching()
@@ -279,6 +279,8 @@ class HomeFragment : Fragment() {
             .subscribe {
             count += (10 -java.util.Random().nextInt(20))
             textViewCount.text = "Число пользователей онлайн: " + count
+              //  progressBar
+               //     .setIndeterminate(true)
             }
     }
 

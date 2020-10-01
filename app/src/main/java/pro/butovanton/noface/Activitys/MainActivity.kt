@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -19,9 +18,9 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.nav_header_main.*
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -73,11 +72,11 @@ class MainActivity : AppCompatActivity() {
         }
         firstDialog.show()
 
-        MobileAds.initialize(this)
+        MobileAds.initialize(this, "ca-app-pub-8158565231911074~2301325206")
 
         mInterstitialAd = InterstitialAd(this)
         mInterstitialAd!!.adUnitId = "ca-app-pub-8158565231911074/5118511494"
-            //    mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+      //          mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
         mInterstitialAd!!.loadAd(AdRequest.Builder().build())
 
         mInterstitialAd!!.adListener = object: AdListener() {
