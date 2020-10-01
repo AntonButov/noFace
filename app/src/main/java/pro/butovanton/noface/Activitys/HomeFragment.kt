@@ -26,7 +26,7 @@ import pro.butovanton.noface.viewmodels.MainViewModel
 import java.util.concurrent.TimeUnit
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), FindDialogAction {
 
     lateinit var bMan1 : Button
     lateinit var bFeMale1 : Button
@@ -46,7 +46,6 @@ class HomeFragment : Fragment() {
     lateinit var b26_35_2 : Button
     lateinit var b35_2 : Button
 
-    lateinit var progressDialog : ProgressDialog
     var disposableDialogCount = CompositeDisposable()
     var disposableSearchigRoom = CompositeDisposable()
     lateinit var disposable : Disposable
@@ -222,28 +221,10 @@ class HomeFragment : Fragment() {
         fabChat.setOnClickListener {
             if (mAuth.isAuth()) {
                 (activity as MainActivity).showAdwert()
-                progressDialog = ProgressDialog(context)
-                progressDialog.setMessage("Поиск чата")
 
-                progressDialog.max = 100
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-//                progressDialog.setIndeterminate(true);
+                val findDialog = FindDialog(this)
+                findDialog.show((activity as MainActivity).getSupportFragmentManager(), "FindDialog")
 
-                progressDialog.show()
-                progressDialog.setOnCancelListener {
-                    model.onCancel()
-                    disposableDialogCount.clear()
-                }
-
-                disposableDialogCount.add(Observable
-                    .intervalRange(1, 100, 1, 1, TimeUnit.SECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe {
-                        progressDialog.setIndeterminate(false)
-                        progressDialog.incrementProgressBy(10)
-                        //     progressDialog.progress = it.toInt()
-                    })
 
                     disposableSearchigRoom.add(model.startSearching()
                         ?.subscribeBy {
@@ -251,7 +232,7 @@ class HomeFragment : Fragment() {
                                 var intent = Intent(context, ChatActivity::class.java)
                                 startActivityForResult(intent, 101)
                             }
-                            progressDialog.hide()
+                           findDialog.dismiss()
                             disposableSearchigRoom.clear()
                             disposableDialogCount.clear()
                             Log.d(TAG, it);
@@ -279,8 +260,6 @@ class HomeFragment : Fragment() {
             .subscribe {
             count += (10 -java.util.Random().nextInt(20))
             textViewCount.text = "Число пользователей онлайн: " + count
-              //  progressBar
-               //     .setIndeterminate(true)
             }
     }
 
@@ -366,6 +345,12 @@ class HomeFragment : Fragment() {
         else
             b35_2.setBackgroundResource(R.drawable.buttons)
     }
+
+    override fun onCancel() {
+        model.onCancel()
+        disposableDialogCount.clear()
+    }
+
 
 
 }
