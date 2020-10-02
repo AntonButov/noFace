@@ -72,12 +72,21 @@ class MainActivity : AppCompatActivity() {
         }
         firstDialog.show()
 
-        MobileAds.initialize(application, "ca-app-pub-8158565231911074~2301325206")
 
-        mInterstitialAd = InterstitialAd(application)
-        mInterstitialAd!!.adUnitId = "ca-app-pub-8158565231911074/5118511494"
-     //          mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712" // test
+        MobileAds.initialize(application, "ca-app-pub-8158565231911074~2301325206")
+        mInterstitilAdInit()
+
+
+    }
+
+    fun showInterAdwert() {
         mInterstitialAd!!.loadAd(AdRequest.Builder().build())
+    }
+
+    fun mInterstitilAdInit() {
+        mInterstitialAd = InterstitialAd(application)
+        //   mInterstitialAd!!.adUnitId = "ca-app-pub-8158565231911074/5118511494"
+        mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712" // test
 
         mInterstitialAd!!.adListener = object: AdListener() {
             override fun onAdLoaded() {
@@ -117,10 +126,6 @@ class MainActivity : AppCompatActivity() {
                 // Code to be executed when the interstitial ad is closed.
             }
         }
-    }
-
-    fun showAdwert() {
-        mInterstitialAd!!.loadAd(AdRequest.Builder().build())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -127,21 +127,6 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
         }
 }
 
-    fun showKeyboard(editText: EditText?) {
-        val imm: InputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT)
-    }
-
-    fun hideKeyboard() {
-        val view = findViewById<View>(android.R.id.content)
-        if (view != null) {
-            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.RESULT_HIDDEN)
-
-        }
-    }
-
     private fun setEmojiconFragment(useSystemDefault: Boolean) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.emojicons, EmojiconsFragment.newInstance(useSystemDefault)).commit()

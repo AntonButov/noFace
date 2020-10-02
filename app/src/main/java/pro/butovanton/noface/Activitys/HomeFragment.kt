@@ -28,6 +28,8 @@ import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment(), FindDialogAction {
 
+    val CHAT_ACTIVITY_REQUEST_CODE = 101
+
     lateinit var bMan1 : Button
     lateinit var bFeMale1 : Button
     lateinit var bAnyGender1 : Button
@@ -220,17 +222,14 @@ class HomeFragment : Fragment(), FindDialogAction {
         val fabChat = root.findViewById(R.id.buttonChat) as Button
         fabChat.setOnClickListener {
             if (mAuth.isAuth()) {
-                (activity as MainActivity).showAdwert()
-
                 val findDialog = FindDialog(this)
                 findDialog.show((activity as MainActivity).getSupportFragmentManager(), "FindDialog")
-
 
                     disposableSearchigRoom.add(model.startSearching()
                         ?.subscribeBy {
                             if (it.equals("guest") || it.equals("owner")) {
                                 var intent = Intent(context, ChatActivity::class.java)
-                                startActivityForResult(intent, 101)
+                                startActivityForResult(intent, CHAT_ACTIVITY_REQUEST_CODE)
                             }
                            findDialog.dismiss()
                             disposableSearchigRoom.clear()
@@ -250,6 +249,12 @@ class HomeFragment : Fragment(), FindDialogAction {
         }
 
         return root
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CHAT_ACTIVITY_REQUEST_CODE)
+            (activity as MainActivity).showInterAdwert()
     }
 
     override fun onResume() {
