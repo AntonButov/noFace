@@ -1,5 +1,7 @@
 package pro.butovanton.noface.Activitys
 
+import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -40,6 +42,8 @@ import java.util.*
 
 class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
 
+    val ACTIVITY_SETTING_CODE = 100
+
     lateinit var edMessage: EditText
     var imogi = false
     var messages = mutableListOf<Massage>()
@@ -47,6 +51,8 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     private lateinit var adapterChat : RecyclerAdapterChat
     private lateinit var viewManager: RecyclerView.LayoutManager
     lateinit var d : Disposable
+
+    var isSetting = false
 
     private val model: ChatViewModel by viewModels()
 
@@ -209,11 +215,29 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
             R.id.action_settings -> {
                 val i = Intent()
                 i.setClass(this, SettingsActivity::class.java)
-                startActivityForResult(i, 0)
+                startActivityForResult(i, ACTIVITY_SETTING_CODE)
+                isSetting = true
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d((App).TAG, "Chat onResumed")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d((App).TAG, "Chat onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d((App).TAG, "Chat onStop")
+        if (!isSetting)
+              finish()
     }
 
     override fun onBackPressed() {
@@ -238,9 +262,17 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         model.disconnectChat()
+        Log.d((App).TAG, "Chat onDestroy")
+        super.onDestroy()
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ACTIVITY_SETTING_CODE)
+            isSetting = false
+    }
+
 }
 
 

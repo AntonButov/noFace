@@ -1,6 +1,7 @@
 package pro.butovanton.noface.di
 
 import android.app.Application
+import android.util.Log
 
 class App : Application() {
 
@@ -20,4 +21,10 @@ class App : Application() {
             .appModule(AppModule())
             .build()
     }
+
+    override fun onTerminate() {
+        super.onTerminate()
+        Log.d( TAG, "App terminate.")
+    }
+
 }

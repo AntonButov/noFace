@@ -85,8 +85,8 @@ class MainActivity : AppCompatActivity() {
 
     fun mInterstitilAdInit() {
         mInterstitialAd = InterstitialAd(application)
-        //   mInterstitialAd!!.adUnitId = "ca-app-pub-8158565231911074/5118511494"
-        mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712" // test
+           mInterstitialAd!!.adUnitId = "ca-app-pub-8158565231911074/5118511494"
+        //mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712" // test
 
         mInterstitialAd!!.adListener = object: AdListener() {
             override fun onAdLoaded() {
