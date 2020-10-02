@@ -7,11 +7,25 @@
     android:background="@drawable/fon1"
     tools:context=".Activitys.HomeFragment">
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adViewHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-8158565231911074/4222637303"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"      >
+    </com.google.android.gms.ads.AdView>
+
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="1"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -128,11 +142,10 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/adViewHome">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -144,9 +157,9 @@
                 android:id="@+id/gender1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"
+                android:text="Ваш пол"
 
-                android:text="Ваш пол" />
+                android:textSize="16dp" />
 
             <Button
                 android:id="@+id/man1"
@@ -181,8 +194,8 @@
                 android:id="@+id/gender2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:text="Пол собеседника" />
+                android:text="Пол собеседника"
+                android:textSize="16dp" />
 
             <Button
                 android:id="@+id/man2"
@@ -226,7 +239,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/buttonchat"
         android:text="Начать чат"
         app:layout_constraintBottom_toBottomOf="parent"

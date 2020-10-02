@@ -12,6 +12,9 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -29,6 +32,8 @@ import java.util.concurrent.TimeUnit
 class HomeFragment : Fragment(), FindDialogAction {
 
     val CHAT_ACTIVITY_REQUEST_CODE = 101
+
+    lateinit var mAdView : AdView
 
     lateinit var bMan1 : Button
     lateinit var bFeMale1 : Button
@@ -63,6 +68,10 @@ class HomeFragment : Fragment(), FindDialogAction {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+
+        mAdView = root.findViewById(R.id.adViewHome)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
         bMan1 = root.findViewById(R.id.man1)
         bFeMale1 = root.findViewById(R.id.feMale1)
@@ -355,8 +364,6 @@ class HomeFragment : Fragment(), FindDialogAction {
         model.onCancel()
         disposableDialogCount.clear()
     }
-
-
 
 }
 
