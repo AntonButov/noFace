@@ -72,16 +72,27 @@ class MainActivity : AppCompatActivity() {
         }
         firstDialog.show()
 
-        MobileAds.initialize(this, "ca-app-pub-8158565231911074~2301325206")
+        MobileAds.initialize(application, "ca-app-pub-8158565231911074~2301325206")
 
-        mInterstitialAd = InterstitialAd(this)
+        mInterstitialAd = InterstitialAd(application)
         mInterstitialAd!!.adUnitId = "ca-app-pub-8158565231911074/5118511494"
-      //          mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712"
+     //          mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712" // test
         mInterstitialAd!!.loadAd(AdRequest.Builder().build())
 
         mInterstitialAd!!.adListener = object: AdListener() {
             override fun onAdLoaded() {
                 Log.d((App).TAG, "AdLoad ")
+
+                if (mInterstitialAd != null
+                    && mInterstitialAd!!.isLoaded()
+                )
+                {
+                    mInterstitialAd!!.show();
+                    Log.d((App).TAG, " Ad show" )
+                } else {
+                    Log.d((App).TAG, " Ad not loaded" )
+                }
+
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -109,16 +120,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun showAdwert() {
-
-        if (mInterstitialAd != null
-            && mInterstitialAd!!.isLoaded()
-        )
-        {
-            mInterstitialAd!!.show();
-        } else {
-   //         Toast.makeText(this, "Ad did not load", Toast.LENGTH_SHORT).show();
-           // startGame();
-        }
+        mInterstitialAd!!.loadAd(AdRequest.Builder().build())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -131,10 +133,5 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-
-    }
 }
 
