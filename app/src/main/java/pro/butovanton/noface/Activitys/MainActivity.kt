@@ -138,5 +138,10 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    override fun onPause() {
+        super.onPause()
+      //  if
+    }
+
 }
 

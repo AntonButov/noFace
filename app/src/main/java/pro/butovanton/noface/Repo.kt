@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
 import io.reactivex.rxjava3.core.*
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import pro.butovanton.noface.Models.Massage
 import pro.butovanton.noface.Models.Room
@@ -31,6 +32,9 @@ open class Repo(open var ref : DatabaseReference) {
     var settingRoom = false
     var cansel = false
     var finding = false
+    var subscribingRoom = false;
+
+    var disposeSubscribeRoom : Disposable? = null
 
     lateinit var listenerRoomsList: ValueEventListener;
 
@@ -83,11 +87,11 @@ open class Repo(open var ref : DatabaseReference) {
                                       if (cansel) {findRoom.onSuccess("Stoping")
                                           cansel = false }
                                       else
-                                      subscribeRoom()
-                                            .subscribeBy {
-                                             setInOut(true)
-                                             findRoom.onSuccess("owner")
-                                          }
+                                      disposeSubscribeRoom = subscribeRoom()
+                                                  .subscribeBy {
+                                                       setInOut(true)
+                                                       findRoom.onSuccess("owner")
+                                                  }
                                   }
               }
         }
@@ -203,6 +207,7 @@ fun setNewRoom() : Single<Boolean> {
 
 
     fun subscribeRoom() : Single<Boolean> {
+        subscribingRoom = true;
         Log.d(TAG, "SubscribeRoom")
         return Single.create {
             listenerEmpty = object : ValueEventListener {
@@ -213,6 +218,7 @@ fun setNewRoom() : Single<Boolean> {
                           it.onSuccess(true)
                             myRefEmpty
                                 ?.removeEventListener(listenerEmpty!!)
+                             subscribingRoom = false
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -235,14 +241,6 @@ fun setNewRoom() : Single<Boolean> {
             refMessageIn!!.removeEventListener(listenerMessage!!)
             myRoom = null
             Log.d(TAG, "Disconect from chat, Room: null")
-        }
-    }
-
-    fun deleteDesertedRoom( dataSnapshot: DataSnapshot) {
-        for (data in dataSnapshot.children) {
-            var room = data.getValue(Room::class.java)
-                if (room!!.message1.end || room.message2.end)
-                        deleteRoom(data.key!!)
         }
     }
 
@@ -270,6 +268,16 @@ fun setNewRoom() : Single<Boolean> {
             if (settingRoom) deleting = true
             else
               deleteRoom()
+    }
+
+    fun onPause() {
+        if (subscribingRoom == true) {
+            myRefEmpty!!
+                .removeEventListener(listenerEmpty!!)
+           if (disposeSubscribeRoom != null)
+               disposeSubscribeRoom?.dispose()
+           disposeSubscribeRoom = null
+        }
     }
 
     fun sendMessage(message: Massage) {

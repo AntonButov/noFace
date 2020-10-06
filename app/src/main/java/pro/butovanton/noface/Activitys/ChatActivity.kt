@@ -231,6 +231,7 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     override fun onPause() {
         super.onPause()
         Log.d((App).TAG, "Chat onPause")
+        //model.onPause()
     }
 
     override fun onStop() {

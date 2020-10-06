@@ -55,8 +55,10 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     var disposableDialogCount = CompositeDisposable()
     var disposableSearchigRoom = CompositeDisposable()
-    lateinit var disposable : Disposable
+    lateinit var disposableUsersCount : Disposable
     var count = 2000
+
+    lateinit var findDialog : FindDialog
 
     private val model: MainViewModel by viewModels()
 
@@ -231,7 +233,7 @@ class HomeFragment : Fragment(), FindDialogAction {
         val fabChat = root.findViewById(R.id.buttonChat) as Button
         fabChat.setOnClickListener {
             if (mAuth.isAuth()) {
-                val findDialog = FindDialog(this)
+                findDialog = FindDialog(this)
                 findDialog.show((activity as MainActivity).getSupportFragmentManager(), "FindDialog")
 
                     disposableSearchigRoom.add(model.startSearching()
@@ -268,7 +270,7 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     override fun onResume() {
         super.onResume()
-        disposable =  Observable.interval(1, TimeUnit.SECONDS)
+        disposableUsersCount =  Observable.interval(1, TimeUnit.SECONDS)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
@@ -279,7 +281,11 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     override fun onPause() {
         super.onPause()
-        disposable.dispose()
+        disposableUsersCount.dispose()
+        if (disposableSearchigRoom.size() > 0 ) {
+            onCancel()
+            findDialog.dismiss()
+        }
     }
 
     fun setEnabled(enab: Boolean) {
@@ -327,12 +333,6 @@ class HomeFragment : Fragment(), FindDialogAction {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        model.onCancel()
-        disposableDialogCount.dispose()
-    }
-
     fun performClickAge2() {
         if (model.userApp.age[0])
             b18_2.setBackgroundResource(R.drawable.buttons_focus)
@@ -360,9 +360,17 @@ class HomeFragment : Fragment(), FindDialogAction {
             b35_2.setBackgroundResource(R.drawable.buttons)
     }
 
+
     override fun onCancel() {
         model.onCancel()
+        disposableSearchigRoom.clear()
         disposableDialogCount.clear()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        model.onCancel()
+        disposableDialogCount.dispose()
     }
 
 }
