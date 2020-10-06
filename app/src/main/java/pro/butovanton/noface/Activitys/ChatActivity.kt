@@ -236,8 +236,8 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
     override fun onStop() {
         super.onStop()
         Log.d((App).TAG, "Chat onStop")
-        if (!isSetting)
-              finish()
+      //  if (!isSetting)
+             // finish()
     }
 
     override fun onBackPressed() {
@@ -255,9 +255,6 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
                 }
             })
             .create()
-        firstDialog.setOnCancelListener {
-            finish()
-        }
         firstDialog.show()
     }
 
