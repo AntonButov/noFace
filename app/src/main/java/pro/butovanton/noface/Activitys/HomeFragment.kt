@@ -56,7 +56,9 @@ class HomeFragment : Fragment(), FindDialogAction {
     var disposableDialogCount = CompositeDisposable()
     var disposableSearchigRoom = CompositeDisposable()
     lateinit var disposableUsersCount : Disposable
-    var count = 2000
+
+    val PEAPLE_COUNT = 2000
+    var count = PEAPLE_COUNT
 
     lateinit var findDialog : FindDialog
 
