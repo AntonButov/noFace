@@ -16,47 +16,47 @@ import javax.inject.Singleton
 //@Singleton
 open class Repo(open var ref : DatabaseReference) {
 
-    var myRoom : Room? = null
-    lateinit var muser : User
-    lateinit var muserApp : UserApp
-    var myRef : DatabaseReference? = null
-    var myRefEmpty :  DatabaseReference? = null
-    var refMessageIn : DatabaseReference? = null
-    var refMessageOut : DatabaseReference? = null
+    private var myRoom : Room? = null
+    private lateinit var muser : User
+    private lateinit var muserApp : UserApp
+    private var myRef : DatabaseReference? = null
+    private var myRefEmpty :  DatabaseReference? = null
+    private var refMessageIn : DatabaseReference? = null
+    private var refMessageOut : DatabaseReference? = null
 
-    var listenerRooms : ValueEventListener? = null
-    var listenerMessage : ValueEventListener? = null
-    var listenerEmpty : ValueEventListener? = null
-    var deleting = false
-    var listenerRoomsDispose = false
-    var settingRoom = false
+    private var listenerRooms : ValueEventListener? = null
+    private var listenerMessage : ValueEventListener? = null
+    private var listenerEmpty : ValueEventListener? = null
+    private var deleting = false
+    private var listenerRoomsDispose = false
+    private var settingRoom = false
     var cansel = false
-    var finding = false
-    var subscribingRoom = false;
+    private var finding = false
+    private var subscribingRoom = false;
 
-    var disposeSubscribeRoom : Disposable? = null
+    private var disposeSubscribeRoom : Disposable? = null
 
-    lateinit var listenerRoomsList: ValueEventListener;
+    private lateinit var listenerRoomsList: ValueEventListener;
 
-    fun saveRoom(room: Room?) : Task<Void> {
+    private fun saveRoom(room: Room?) : Task<Void> {
         return ref
             .child(room!!.key.toString())
             .setValue(room)
     }
 
-    fun getKey() : String? {
+    private fun getKey() : String? {
         return ref
             .push()
             .key
     }
 
-    fun setRoom(room : Room) {
+    private fun setRoom(room : Room) {
         myRoom = room
         myRef = ref.child(myRoom!!.key.toString())
         myRefEmpty = myRef!!.child("empty")
     }
 
-    fun setInOut(owner : Boolean) {
+    private fun setInOut(owner : Boolean) {
         if (owner) {
             refMessageIn = myRef?.child("message1")
             refMessageOut = myRef?.child("message2")
@@ -97,7 +97,7 @@ open class Repo(open var ref : DatabaseReference) {
         }
     }
 
-    fun findFreeRoom2() : Single<String> {
+    private fun findFreeRoom2() : Single<String> {
         Log.d(TAG, "Finding")
         finding = true
         return Single.create({  find ->
@@ -124,7 +124,7 @@ open class Repo(open var ref : DatabaseReference) {
              })
     }
 
-    fun getRoomsList() : Observable<Room> {
+    private fun getRoomsList() : Observable<Room> {
         return Observable.create ({
             listenerRoomsList = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
@@ -148,24 +148,24 @@ open class Repo(open var ref : DatabaseReference) {
         )
     }
 
-    fun isUserValid(user: User, userApp: UserApp) : Boolean {
+    private fun isUserValid(user: User, userApp: UserApp) : Boolean {
     return  isUserValidGender(user, userApp) &&
             isUserValidAge(user, userApp)
     }
 
-    fun isUserValidGender(user: User, userApp: UserApp) : Boolean{
+    private fun isUserValidGender(user: User, userApp: UserApp) : Boolean{
         return userApp.gender == muser.gender &&
                 muserApp.gender == user.gender
     }
 
-    fun isUserValidAge(user: User, userApp: UserApp) : Boolean {
+    private fun isUserValidAge(user: User, userApp: UserApp) : Boolean {
     var res : Boolean
     if (muser.gender == 2) res = true
     else res = muserApp.age[user.age] && userApp.age[muser.age]
     return res
     }
 
-fun setNewRoom() : Single<Boolean> {
+    private fun setNewRoom() : Single<Boolean> {
     Log.d(TAG, "SetNewRoom")
     settingRoom = true
     return Single.create({settingRoomEmit ->
@@ -190,6 +190,7 @@ fun setNewRoom() : Single<Boolean> {
                 if (messageIn != null && messageIn!!.end) {
                     it.onComplete()
                     disConnectFromChat()
+                    refMessageIn!!.removeEventListener(listenerMessage!!)
                     deleteRoom()
                     return
                 }
@@ -206,7 +207,7 @@ fun setNewRoom() : Single<Boolean> {
     }
 
 
-    fun subscribeRoom() : Single<Boolean> {
+    private fun subscribeRoom() : Single<Boolean> {
         subscribingRoom = true;
         Log.d(TAG, "SubscribeRoom")
         return Single.create {
@@ -238,13 +239,12 @@ fun setNewRoom() : Single<Boolean> {
             var messagEnd = Massage()
             messagEnd.end = true
             sendMessage(messagEnd)
-            refMessageIn!!.removeEventListener(listenerMessage!!)
             myRoom = null
-            Log.d(TAG, "Disconect from chat, Room: null")
+            Log.d(TAG, "Disconect from chat,")
         }
     }
 
-    fun deleteRoom() {
+    private fun deleteRoom() {
         myRoom = null
         Log.d(TAG, "Room: null")
         if (myRefEmpty != null && listenerEmpty != null)
@@ -256,7 +256,7 @@ fun setNewRoom() : Single<Boolean> {
         }
     }
 
-    fun deleteRoom( key : String) {
+    private fun deleteRoom( key : String) {
         ref.child(key).removeValue()
     }
 
@@ -268,16 +268,6 @@ fun setNewRoom() : Single<Boolean> {
             if (settingRoom) deleting = true
             else
               deleteRoom()
-    }
-
-    fun onPause() {
-        if (subscribingRoom == true) {
-            myRefEmpty!!
-                .removeEventListener(listenerEmpty!!)
-           if (disposeSubscribeRoom != null)
-               disposeSubscribeRoom?.dispose()
-           disposeSubscribeRoom = null
-        }
     }
 
     fun sendMessage(message: Massage) {

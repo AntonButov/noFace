@@ -1,7 +1,10 @@
 package pro.butovanton.noface.di
 
 import android.app.Application
+import android.content.Intent
 import android.util.Log
+import pro.butovanton.noface.MService
+import pro.butovanton.noface.MyFirebaseMessagingService
 
 class App : Application() {
 
@@ -20,6 +23,7 @@ class App : Application() {
             .builder()
             .appModule(AppModule())
             .build()
+
     }
 
     override fun onTerminate() {

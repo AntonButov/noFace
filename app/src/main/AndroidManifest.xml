@@ -13,7 +13,13 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activitys.SettingsActivity"
+        <service
+            android:name=".MService"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity
+            android:name=".Activitys.SettingsActivity"
             android:label="Настройки" />
 
         <meta-data

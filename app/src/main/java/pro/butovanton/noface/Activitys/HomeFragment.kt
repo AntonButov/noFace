@@ -371,7 +371,10 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     override fun onDestroy() {
         super.onDestroy()
-        model.onCancel()
+        if (disposableSearchigRoom.size() > 0 ) {
+            onCancel()
+            findDialog.dismiss()
+        }
         disposableDialogCount.dispose()
     }
 

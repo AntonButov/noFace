@@ -1,6 +1,7 @@
 package pro.butovanton.noface.Activitys
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -18,6 +19,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.ads.*
 import com.google.android.material.navigation.NavigationView
+import pro.butovanton.noface.MService
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 
@@ -76,7 +78,8 @@ class MainActivity : AppCompatActivity() {
         MobileAds.initialize(application, "ca-app-pub-8158565231911074~2301325206")
         mInterstitilAdInit()
 
-
+        val intentMService = Intent( this, MService::class.java)
+        startService(intentMService)
     }
 
     fun showInterAdwert() {

@@ -21,8 +21,4 @@ class ChatViewModel() : ViewModel() {
   repo.sendMessage(message)
  }
 
- fun onPause() {
-  repo.onPause()
- }
-
  }

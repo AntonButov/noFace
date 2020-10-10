@@ -22,8 +22,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.d(TAG, "MyFirebaseMessagingService created")
     }
 
-
-
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "MyFirebaseMessagingService destroed")
