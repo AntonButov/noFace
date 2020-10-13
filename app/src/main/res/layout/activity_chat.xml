@@ -63,6 +63,7 @@
             android:paddingTop="@dimen/fab_margin"
             android:paddingRight="@dimen/fab_margin"
             android:paddingBottom="@dimen/fab_margin"
+            android:hint="Сообщение"
             app:layout_constraintBottom_toTopOf="@+id/emojicons"
             app:layout_constraintEnd_toStartOf="@+id/sendButton"
             app:layout_constraintStart_toEndOf="@+id/imogiButton" />

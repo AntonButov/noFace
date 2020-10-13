@@ -27,7 +27,6 @@ class FindDialog(val findDialogAction : FindDialogAction) : DialogFragment() {
                 "Отмена."
             ) { dialog: DialogInterface?, which: Int ->
                 findDialogAction.onCancel()
-               // dismiss()
             }
             .create()
     }

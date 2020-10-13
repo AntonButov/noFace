@@ -31,4 +31,8 @@ class MainViewModel() : ViewModel() {
         repo.onCancel()
     }
 
+    fun disconectFromChat() {
+        repo.disConnectFromChat()
+    }
+
  }

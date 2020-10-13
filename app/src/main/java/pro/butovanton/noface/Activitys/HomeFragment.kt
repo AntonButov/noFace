@@ -375,6 +375,7 @@ class HomeFragment : Fragment(), FindDialogAction {
             onCancel()
             findDialog.dismiss()
         }
+        else model.disconectFromChat()
         disposableDialogCount.dispose()
     }
 

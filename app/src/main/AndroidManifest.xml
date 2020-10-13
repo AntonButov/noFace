@@ -16,7 +16,8 @@
         <service
             android:name=".MService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true">
+        </service>
 
         <activity
             android:name=".Activitys.SettingsActivity"

@@ -7,11 +7,10 @@ import android.util.Log
 import pro.butovanton.noface.di.App
 
 class MService : Service() {
-    val repo = (App).appcomponent.getRepo()
+  //  val repo = (App).appcomponent.getRepo()
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d((App).TAG, "Service startComand.")
-
         return START_STICKY
     }
 
@@ -21,7 +20,7 @@ class MService : Service() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        repo.onCancel()
+        //repo.onCancel()
         super.onTaskRemoved(rootIntent)
         Log.d((App).TAG, "Task removed.")
     }
