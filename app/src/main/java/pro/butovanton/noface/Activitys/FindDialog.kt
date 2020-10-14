@@ -11,14 +11,15 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import pro.butovanton.noface.R
 
-class FindDialog(val findDialogAction : FindDialogAction) : DialogFragment() {
+class FindDialog(val findDialogAction : FindDialogAction, val advertDontShow : Boolean) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val v: View = inflater.inflate(R.layout.find_chat_dialog, null)
 
         val mAdView = v.findViewById(R.id.adViewFindDialog) as AdView
         val adRequest = AdRequest.Builder().build()
-        mAdView.loadAd(adRequest)
+        if (!advertDontShow)
+           mAdView.loadAd(adRequest)
 
         return AlertDialog.Builder(requireActivity())
             .setTitle("Поиск чата...")

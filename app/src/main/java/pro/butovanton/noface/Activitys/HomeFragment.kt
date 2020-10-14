@@ -236,7 +236,7 @@ class HomeFragment : Fragment(), FindDialogAction {
         val fabChat = root.findViewById(R.id.buttonChat) as Button
         fabChat.setOnClickListener {
             if (mAuth.isAuth()) {
-                findDialog = FindDialog(this)
+                findDialog = FindDialog(this, model.getIsAdvertDontShow())
                 findDialog.show((activity as MainActivity).getSupportFragmentManager(), "FindDialog")
 
                     disposableSearchigRoom.add(model.startSearching()
