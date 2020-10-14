@@ -10,6 +10,7 @@ import pro.butovanton.noface.di.App
 class MainViewModel() : ViewModel() {
 
     val repo = (App).appcomponent.getRepo()
+    val billing = (App).appcomponent.getBilling()
     var searching : Single<String>? = null
 
     var user = User()
@@ -24,7 +25,6 @@ class MainViewModel() : ViewModel() {
                }
 
         return searching
-
     }
 
     fun onCancel() {
@@ -33,6 +33,10 @@ class MainViewModel() : ViewModel() {
 
     fun disconectFromChat() {
         repo.disConnectFromChat()
+    }
+
+    fun getIsAdvertDontShow() : Boolean {
+        return billing.isAdvertDontShow()
     }
 
  }

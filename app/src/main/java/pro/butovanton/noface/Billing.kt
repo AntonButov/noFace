@@ -2,18 +2,20 @@ package pro.butovanton.noface
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import android.widget.Button
 import com.android.billingclient.api.*
+import io.reactivex.rxjava3.core.Single
 import pro.butovanton.noface.di.App
 import java.util.ArrayList
 
-class Billing(val app : Application) {
+class Billing(val app : Context) {
 
-    private var mySubs: List<Purchase>? = null
-    private var subOnServer: SkuDetails? = null
+    var mySubs: List<Purchase>? = null
+    var subOnServer: SkuDetails? = null
 
-    private var billingClient : BillingClient
+    private lateinit var billingClient : BillingClient
     private val mSkuId = "weekadvert"
 
     private val purchaseUpdateListener =
@@ -32,6 +34,14 @@ class Billing(val app : Application) {
             .enablePendingPurchases()
             .build()
         getMySubs()
+    }
+
+    fun isValidBilling() : Boolean{
+        return mySubs != null && subOnServer != null
+    }
+
+    fun isAdvertDontShow(): Boolean {
+        return isValidBilling() && mySubs?.size!! > 0
     }
 
     private fun getMySubs() {

@@ -75,7 +75,8 @@ class HomeFragment : Fragment(), FindDialogAction {
 
         mAdView = root.findViewById(R.id.adViewHome)
         val adRequest = AdRequest.Builder().build()
-        mAdView.loadAd(adRequest)
+        if (!model.getIsAdvertDontShow())
+            mAdView.loadAd(adRequest)
 
         bMan1 = root.findViewById(R.id.man1)
         bFeMale1 = root.findViewById(R.id.feMale1)

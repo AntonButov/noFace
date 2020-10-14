@@ -10,11 +10,16 @@ class App : Application() {
 
     companion object {
 
+        private lateinit var app : Application
+
         val TAG = "ANONIM_CHAT"
 
         @JvmStatic
         lateinit var appcomponent: AppComponent
 
+        fun getApp() : Application {
+            return app
+        }
     }
 
     override fun onCreate() {
@@ -24,6 +29,8 @@ class App : Application() {
             .appModule(AppModule())
             .build()
 
+        app = this
+        appcomponent.getBilling()
     }
 
     override fun onTerminate() {

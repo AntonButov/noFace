@@ -30,7 +30,7 @@ class InstrumentedTest {
     lateinit var mAuth : Auth
 
     val TESTID = "testId"
-
+/*
     @Before
     fun init() {
         testAppomponent = DaggerAppComponent
@@ -115,5 +115,7 @@ class InstrumentedTest {
     fun  authRest() {
         assertTrue(mAuth.isAuth())
     }
+
+ */
 
  }

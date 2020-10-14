@@ -19,7 +19,7 @@ import javax.inject.Inject
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class UnitTest {
+class TestRepo {
 
     lateinit var testAppomponent : AppComponent
 
