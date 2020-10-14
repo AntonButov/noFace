@@ -256,7 +256,7 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CHAT_ACTIVITY_REQUEST_CODE)
+        if (requestCode == CHAT_ACTIVITY_REQUEST_CODE && !model.getIsAdvertDontShow())
             (activity as MainActivity).showInterAdwert()
     }
 
