@@ -32,3 +32,6 @@
     </com.google.android.gms.ads.AdView>
 
 </LinearLayout>
+
+<!--        app:adUnitId="ca-app-pub-3940256099942544/6300978111" test  -->
+<!--      app:adUnitId="ca-app-pub-8158565231911074/9959863923" - My-->

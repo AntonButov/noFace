@@ -4,22 +4,63 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import io.reactivex.rxjava3.core.Observable
 import pro.butovanton.noface.R
+import java.util.*
+import java.util.concurrent.TimeUnit
 
-class FindDialog(val findDialogAction : FindDialogAction, val advertDontShow : Boolean) : DialogFragment() {
+
+class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boolean) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val v: View = inflater.inflate(R.layout.find_chat_dialog, null)
 
         val mAdView = v.findViewById(R.id.adViewFindDialog) as AdView
+
+        mAdView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                findDialogAction.startSearching()
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                // Code to be executed when an ad request fails.
+            }
+
+            override fun onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            override fun onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            override fun onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            override fun onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        }
+
+        Observable.just(1)
+            .delay(5000, TimeUnit.MILLISECONDS)
+            .subscribe {
+                findDialogAction.startSearching()
+            }
+
         val adRequest = AdRequest.Builder().build()
         if (!advertDontShow)
            mAdView.loadAd(adRequest)
+        else findDialogAction.startSearching()
 
         return AlertDialog.Builder(requireActivity())
             .setTitle("Поиск чата...")

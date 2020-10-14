@@ -239,17 +239,6 @@ class HomeFragment : Fragment(), FindDialogAction {
                 findDialog = FindDialog(this, model.getIsAdvertDontShow())
                 findDialog.show((activity as MainActivity).getSupportFragmentManager(), "FindDialog")
 
-                    disposableSearchigRoom.add(model.startSearching()
-                        ?.subscribeBy {
-                            if (it.equals("guest") || it.equals("owner")) {
-                                var intent = Intent(context, ChatActivity::class.java)
-                                startActivityForResult(intent, CHAT_ACTIVITY_REQUEST_CODE)
-                            }
-                           findDialog.dismiss()
-                            disposableSearchigRoom.clear()
-                            disposableDialogCount.clear()
-                            Log.d(TAG, it);
-                        })
             }
             else {
                 val toast: Toast =
@@ -361,6 +350,20 @@ class HomeFragment : Fragment(), FindDialogAction {
             b35_2.setBackgroundResource(R.drawable.buttons_focus)
         else
             b35_2.setBackgroundResource(R.drawable.buttons)
+    }
+
+    override fun startSearching() {
+        disposableSearchigRoom.add(model.startSearching()
+            ?.subscribeBy {
+                if (it.equals("guest") || it.equals("owner")) {
+                    var intent = Intent(context, ChatActivity::class.java)
+                    startActivityForResult(intent, CHAT_ACTIVITY_REQUEST_CODE)
+                }
+                findDialog.dismiss()
+                disposableSearchigRoom.clear()
+                disposableDialogCount.clear()
+                Log.d(TAG, it);
+            })
     }
 
 

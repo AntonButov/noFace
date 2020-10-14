@@ -36,7 +36,7 @@ class AdvertFragment : Fragment() {
              model.launchBilling(requireActivity())
         }
 
-        if (model.isSubOk())
+        if (model.getIsAdvertDontShow())
             adverMountButton.visibility = View.INVISIBLE
         else
             adverMountButton.visibility = View.VISIBLE

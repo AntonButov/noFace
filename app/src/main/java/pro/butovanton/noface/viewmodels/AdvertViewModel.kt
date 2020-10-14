@@ -13,8 +13,8 @@ class AdvertViewModel() : ViewModel() {
 
     private val billing = (App).appcomponent.getBilling()
 
-    fun isSubOk() : Boolean {
-        return billing.isSubOk()
+    fun getIsAdvertDontShow() : Boolean {
+        return billing.isAdvertDontShow()
     }
 
     fun launchBilling(activity: Activity) {
