@@ -13,8 +13,8 @@ android {
         applicationId "pro.butovanton.noface"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 107
-        versionName "1.07"
+        versionCode 112
+        versionName "1.12"
         multiDexEnabled true
         android.defaultConfig.vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

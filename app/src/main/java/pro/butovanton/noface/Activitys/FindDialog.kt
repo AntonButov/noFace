@@ -11,12 +11,17 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.Disposable
 import pro.butovanton.noface.R
 import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boolean) : DialogFragment() {
+
+    private lateinit var postStartingSearching: Disposable
+    var isCancel = true
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val inflater = requireActivity().layoutInflater
         val v: View = inflater.inflate(R.layout.find_chat_dialog, null)
@@ -25,7 +30,8 @@ class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boo
 
         mAdView.adListener = object : AdListener() {
             override fun onAdLoaded() {
-                findDialogAction.startSearching()
+                if (!isCancel)
+                      findDialogAction.startSearching()
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
@@ -51,9 +57,10 @@ class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boo
             }
         }
 
-        Observable.just(1)
+       postStartingSearching = Observable.just(1)
             .delay(5000, TimeUnit.MILLISECONDS)
             .subscribe {
+                isCancel = true
                 findDialogAction.startSearching()
             }
 
@@ -68,6 +75,7 @@ class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boo
             .setPositiveButton(
                 "Отмена."
             ) { dialog: DialogInterface?, which: Int ->
+                postStartingSearching.dispose()
                 findDialogAction.onCancel()
             }
             .create()
@@ -75,7 +83,14 @@ class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boo
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
+        postStartingSearching.dispose()
         findDialogAction.onCancel()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        isCancel = true
+        postStartingSearching.dispose()
     }
 
 }

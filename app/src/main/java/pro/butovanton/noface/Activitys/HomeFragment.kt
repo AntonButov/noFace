@@ -233,10 +233,10 @@ class HomeFragment : Fragment(), FindDialogAction {
         performClickAge2()
         bAnyGender1.performClick()
 
+        findDialog = FindDialog(this, model.getIsAdvertDontShow())
         val fabChat = root.findViewById(R.id.buttonChat) as Button
         fabChat.setOnClickListener {
             if (mAuth.isAuth()) {
-                findDialog = FindDialog(this, model.getIsAdvertDontShow())
                 findDialog.show((activity as MainActivity).getSupportFragmentManager(), "FindDialog")
 
             }
@@ -276,7 +276,7 @@ class HomeFragment : Fragment(), FindDialogAction {
         disposableUsersCount.dispose()
         if (disposableSearchigRoom.size() > 0 ) {
             onCancel()
-            findDialog.dismiss()
+        findDialog.dismiss()
         }
     }
 
@@ -353,17 +353,18 @@ class HomeFragment : Fragment(), FindDialogAction {
     }
 
     override fun startSearching() {
-        disposableSearchigRoom.add(model.startSearching()
-            ?.subscribeBy {
-                if (it.equals("guest") || it.equals("owner")) {
-                    var intent = Intent(context, ChatActivity::class.java)
-                    startActivityForResult(intent, CHAT_ACTIVITY_REQUEST_CODE)
-                }
-                findDialog.dismiss()
-                disposableSearchigRoom.clear()
-                disposableDialogCount.clear()
-                Log.d(TAG, it);
-            })
+        if (disposableSearchigRoom.size() == 0)
+              disposableSearchigRoom.add(model.startSearching()
+                 ?.subscribeBy {
+                       if (it.equals("guest") || it.equals("owner")) {
+                          var intent = Intent(context, ChatActivity::class.java)
+                         startActivityForResult(intent, CHAT_ACTIVITY_REQUEST_CODE)
+                       }
+                       findDialog.dismiss()
+                       disposableSearchigRoom.clear()
+                       disposableDialogCount.clear()
+                       Log.d(TAG, it);
+                 })
     }
 
 
