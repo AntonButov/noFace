@@ -65,9 +65,14 @@ class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boo
             }
 
         val adRequest = AdRequest.Builder().build()
-        if (!advertDontShow)
-           mAdView.loadAd(adRequest)
-        else findDialogAction.startSearching()
+        if (!advertDontShow) {
+            mAdView.visibility = View.VISIBLE
+            mAdView.loadAd(adRequest)
+        }
+        else {
+            mAdView.visibility = View.GONE
+            findDialogAction.startSearching()
+        }
 
         return AlertDialog.Builder(requireActivity())
             .setTitle("Поиск чата...")

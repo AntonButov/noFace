@@ -24,6 +24,8 @@ class AdvertFragment : Fragment() {
 
     private val model: AdvertViewModel by viewModels()
 
+    lateinit var adverMountButton : Button
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,16 +33,19 @@ class AdvertFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_advert, container, false)
 
-        val adverMountButton = root.findViewById<Button>(R.id.adverMounth)
+        adverMountButton = root.findViewById<Button>(R.id.adverMounth)
         adverMountButton.setOnClickListener {
              model.launchBilling(requireActivity())
         }
 
+        return root
+    }
+
+    override fun onResume() {
+        super.onResume()
         if (model.getIsAdvertDontShow())
             adverMountButton.visibility = View.INVISIBLE
         else
             adverMountButton.visibility = View.VISIBLE
-        return root
     }
-
 }

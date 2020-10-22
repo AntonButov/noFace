@@ -13,6 +13,10 @@ import java.util.ArrayList
 class Billing(val app : Context) {
 
     var mySubs: List<Purchase>? = null
+    set(value) {
+        field = value
+        value?.let { logSubs(it) }
+    }
     var subOnServer: SkuDetails? = null
 
     private lateinit var billingClient : BillingClient
@@ -24,8 +28,8 @@ class Billing(val app : Context) {
             if (purchases != null) {
                 acknowledgePurchase(purchases.get(0))
                 consumePurchase(purchases.get(0))
+             mySubs = purchases
             }
-            // To be implemented in a later section.
         }
 
     init {
@@ -65,11 +69,6 @@ class Billing(val app : Context) {
     private fun queryPurchases(): List<Purchase> {
         val purchasesResult: Purchase.PurchasesResult =
             billingClient.queryPurchases(BillingClient.SkuType.SUBS)
-        if (purchasesResult.purchasesList!!.size == 0) {
-            Log.d((App).TAG, " Подписки не найдены.")
-        } else {
-            Log.d((App).TAG, " Подписки найдены.")
-        }
         return purchasesResult.purchasesList!!
     }
 
@@ -116,9 +115,8 @@ class Billing(val app : Context) {
     }
 
     private fun consumePurchase(purchase: Purchase) {
-        val listener =
-            ConsumeResponseListener { billingResult, purchaseToken ->
-                Log.d((App).TAG, "onConsumePurchaseResponse: " + billingResult.getResponseCode().toString());
+        val listener = ConsumeResponseListener { billingResult, purchaseToken ->
+                Log.d((App).TAG, "Преобретена подписка.")
             }
         val consumeParams = ConsumeParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
@@ -131,5 +129,11 @@ class Billing(val app : Context) {
             .setSkuDetails(subOnServer!!)
             .build()
         billingClient.launchBillingFlow(activity, billingFlowParams)
+    }
+
+    private fun logSubs(mSubs : List<Purchase> ) {
+            for (mSub in mSubs)
+                Log.d((App).TAG, "Найдена подписка: " + mSub.sku)
+
     }
 }

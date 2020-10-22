@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
@@ -75,8 +77,12 @@ class HomeFragment : Fragment(), FindDialogAction {
 
         mAdView = root.findViewById(R.id.adViewHome)
         val adRequest = AdRequest.Builder().build()
-        if (!model.getIsAdvertDontShow())
+        if (!model.getIsAdvertDontShow()) {
             mAdView.loadAd(adRequest)
+            mAdView.visibility = VISIBLE
+        }
+        else
+            mAdView.visibility = GONE
 
         bMan1 = root.findViewById(R.id.man1)
         bFeMale1 = root.findViewById(R.id.feMale1)
