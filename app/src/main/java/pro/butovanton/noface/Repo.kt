@@ -239,6 +239,7 @@ open class Repo(open var ref : DatabaseReference) {
             var messagEnd = Massage()
             messagEnd.end = true
             sendMessage(messagEnd)
+            Log.d(TAG, "Send end message")
             myRoom = null
             Log.d(TAG, "Disconect from chat,")
         }

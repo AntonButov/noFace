@@ -98,4 +98,20 @@ class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boo
         postStartingSearching.dispose()
     }
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
 }
