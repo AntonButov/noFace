@@ -39,4 +39,8 @@ class MainViewModel() : ViewModel() {
         return billing.isAdvertDontShow()
     }
 
+    suspend fun getCountRooms() : Long? {
+        return repo.getRoomsCount()
+    }
+
  }

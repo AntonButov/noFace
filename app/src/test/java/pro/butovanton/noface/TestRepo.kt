@@ -4,14 +4,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 import org.junit.Assert.*
 import org.junit.Before
-import pro.butovanton.noface.di.App
-import pro.butovanton.noface.di.AppComponent
-import pro.butovanton.noface.di.AppModule
-import pro.butovanton.noface.di.DaggerAppComponent
+import pro.butovanton.noface.di.*
 import javax.inject.Inject
 
 /**
@@ -21,30 +19,12 @@ import javax.inject.Inject
  */
 class TestRepo {
 
-    lateinit var testAppomponent : AppComponent
-
-    @Before
-    fun init() {
-       testAppomponent = DaggerAppComponent
-            .builder()
-            .appModule(AppModule())
-            .build()
-    }
+var repo = App.appcomponent.getRepoTest()
 
     @Test
-    fun initMyRef() {
-        val repo = testAppomponent.getRepo()
-            val listener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    assertTrue(true)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                }
-    }
-            repo.ref.child("chatrooms").addListenerForSingleValueEvent(listener)
-
-        }
+    fun getCountRoomsTest() = runBlocking{
+      val countRooms = repo.getRoomsCount()
+        assertEquals(countRooms, 1)
     }
 
 

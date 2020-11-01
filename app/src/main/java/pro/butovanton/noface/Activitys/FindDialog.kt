@@ -3,6 +3,7 @@ package pro.butovanton.noface.Activitys
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -18,6 +19,14 @@ import java.util.concurrent.TimeUnit
 
 
 class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boolean) : DialogFragment() {
+
+    companion object {
+        fun newInstance(bundle: Bundle, indDialogAction: FindDialogAction, advertDontShow: Boolean): FindDialog {
+            val fragment = FindDialog(indDialogAction, advertDontShow)
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
 
     private lateinit var postStartingSearching: Disposable
     var isCancel = true
@@ -98,6 +107,10 @@ class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boo
         postStartingSearching.dispose()
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        Log.d("DEBUG", "Find dialog dissmis.")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

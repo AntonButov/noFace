@@ -12,6 +12,8 @@ import pro.butovanton.noface.Models.User
 import pro.butovanton.noface.Models.UserApp
 import pro.butovanton.noface.di.App.Companion.TAG
 import javax.inject.Singleton
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 //@Singleton
 open class Repo(open var ref : DatabaseReference) {
@@ -38,25 +40,25 @@ open class Repo(open var ref : DatabaseReference) {
 
     private lateinit var listenerRoomsList: ValueEventListener;
 
-    private fun saveRoom(room: Room?) : Task<Void> {
+    fun saveRoom(room: Room?) : Task<Void> {
         return ref
             .child(room!!.key.toString())
             .setValue(room)
     }
 
-    private fun getKey() : String? {
+    fun getKey() : String? {
         return ref
             .push()
             .key
     }
 
-    private fun setRoom(room : Room) {
+    fun setRoom(room : Room) {
         myRoom = room
         myRef = ref.child(myRoom!!.key.toString())
         myRefEmpty = myRef!!.child("empty")
     }
 
-    private fun setInOut(owner : Boolean) {
+    fun setInOut(owner : Boolean) {
         if (owner) {
             refMessageIn = myRef?.child("message1")
             refMessageOut = myRef?.child("message2")
@@ -147,7 +149,23 @@ open class Repo(open var ref : DatabaseReference) {
         }
         )
     }
+    
+    suspend fun getRoomsCount() : Long? = suspendCoroutine {continuation ->
+        listenerRoomsList = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d(TAG, "listenerRoomsForCount")
+                continuation.resume(snapshot.childrenCount)
+                ref.removeEventListener(listenerRoomsList)
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                continuation.resume(null)
+            }
+        }
+        ref.addValueEventListener(listenerRoomsList)
+
+    }
+ 
     private fun isUserValid(user: User, userApp: UserApp) : Boolean {
     return  isUserValidGender(user, userApp) &&
             isUserValidAge(user, userApp)

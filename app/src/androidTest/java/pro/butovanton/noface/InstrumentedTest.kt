@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.subscribers.TestSubscriber
 import org.junit.After
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -13,11 +14,8 @@ import org.junit.runner.RunWith
 import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
 import pro.butovanton.noface.Models.UserApp
-import pro.butovanton.noface.di.App
+import pro.butovanton.noface.di.*
 import pro.butovanton.noface.di.App.Companion.TAG
-import pro.butovanton.noface.di.AppComponent
-import pro.butovanton.noface.di.AppModule
-import pro.butovanton.noface.di.DaggerAppComponent
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.MILLISECONDS
@@ -26,27 +24,36 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 class InstrumentedTest {
 
     lateinit var testAppomponent: AppComponent
-    lateinit var repoTest : RepoTest
-    lateinit var mAuth : Auth
+    lateinit var repoTest: RepoTest
+    lateinit var mAuth: Auth
 
     val TESTID = "testId"
-/*
+
     @Before
     fun init() {
+        /*
         testAppomponent = DaggerAppComponent
             .builder()
             .appModule(AppModule())
             .build()
-    repoTest = testAppomponent.getRepoTest()
-    mAuth =  (App).appcomponent.getAuth()
+        repoTest = testAppomponent.getRepoTest()
+        */
+        repoTest = (App).appcomponent.getRepoTest()
+        mAuth = (App).appcomponent.getAuth()
 
-    var repo = (App).appcomponent.getRepo()
-    var repo1 = (App).appcomponent.getRepo()
+        //  var repo = (App).appcomponent.getRepo()
+        //  var repo1 = (App).appcomponent.getRepo()
     }
 
 
+    @Test
+    fun setRoom() {
+        val str = repoTest.getKey()
+        assertNotNull(repoTest.getKey())
+    }
 
-     @Test
+
+    @Test
     fun saveRoom() {
         var count = CountDownLatch(1)
         var user = User(2, 0)
@@ -56,12 +63,16 @@ class InstrumentedTest {
         repoTest.setRoom(room)
         repoTest.setInOut(true)
         repoTest.saveRoom(room)
-            .addOnCompleteListener{
+            .addOnCompleteListener {
                 assertTrue(true)
                 count.countDown()
-        }
-        count.await(1, TimeUnit.MINUTES)
+            }
+        count.await()
     }
+}
+
+
+/*
 
     @Test
     fun saveRooms() {
@@ -116,6 +127,9 @@ class InstrumentedTest {
         assertTrue(mAuth.isAuth())
     }
 
- */
+
 
  }
+
+
+ */

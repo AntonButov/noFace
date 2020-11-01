@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
@@ -24,14 +25,18 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.delay
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.di.App.Companion.TAG
 import pro.butovanton.noface.viewmodels.MainViewModel
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 class HomeFragment : Fragment(), FindDialogAction {
+
 
     val CHAT_ACTIVITY_REQUEST_CODE = 101
 
@@ -57,7 +62,7 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     var disposableDialogCount = CompositeDisposable()
     var disposableSearchigRoom = CompositeDisposable()
-    lateinit var disposableUsersCount : Disposable
+   // lateinit var disposableUsersCount : Disposable
 
     val PEAPLE_COUNT = 2000
     var count = PEAPLE_COUNT
@@ -239,7 +244,7 @@ class HomeFragment : Fragment(), FindDialogAction {
         performClickAge2()
         bAnyGender1.performClick()
 
-        findDialog = FindDialog(this, model.getIsAdvertDontShow())
+        findDialog = FindDialog.newInstance(Bundle(),this, model.getIsAdvertDontShow())
         val fabChat = root.findViewById(R.id.buttonChat) as Button
         fabChat.setOnClickListener {
             if (mAuth.isAuth()) {
@@ -257,6 +262,13 @@ class HomeFragment : Fragment(), FindDialogAction {
             }
         }
 
+        lifecycleScope.launchWhenCreated {
+            while (true) {
+               val users = model.getCountRooms()
+               textViewCount.text = "Число пользователей онлайн: " + users
+               delay(5000)
+            }
+        }
         return root
     }
 
@@ -268,18 +280,18 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     override fun onResume() {
         super.onResume()
-        disposableUsersCount =  Observable.interval(1, TimeUnit.SECONDS)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-            count += (10 -java.util.Random().nextInt(20))
-            textViewCount.text = "Число пользователей онлайн: " + count
-            }
+      //  disposableUsersCount =  Observable.interval(1, TimeUnit.SECONDS)
+      //      .subscribeOn(Schedulers.io())
+      //      .observeOn(AndroidSchedulers.mainThread())
+      //      .subscribe {
+      //      count += (10 -java.util.Random().nextInt(20))
+      //      textViewCount.text = "Число пользователей онлайн: " + count
+      //      }
     }
 
     override fun onPause() {
         super.onPause()
-        disposableUsersCount.dispose()
+      //  disposableUsersCount.dispose()
         if (disposableSearchigRoom.size() > 0 ) {
             onCancel()
         findDialog.dismiss()
