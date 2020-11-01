@@ -127,4 +127,9 @@ class FindDialog(val findDialogAction: FindDialogAction, val advertDontShow: Boo
     override fun onResume() {
         super.onResume()
     }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("DEBUG", "Dialog on pause.")
+    }
 }

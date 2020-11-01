@@ -294,8 +294,8 @@ class HomeFragment : Fragment(), FindDialogAction {
       //  disposableUsersCount.dispose()
         if (disposableSearchigRoom.size() > 0 ) {
             onCancel()
-        findDialog.dismiss()
         }
+        findDialog.dismiss()
     }
 
     fun setEnabled(enab: Boolean) {
@@ -371,18 +371,20 @@ class HomeFragment : Fragment(), FindDialogAction {
     }
 
     override fun startSearching() {
-        if (disposableSearchigRoom.size() == 0)
-              disposableSearchigRoom.add(model.startSearching()
-                 ?.subscribeBy {
-                       if (it.equals("guest") || it.equals("owner")) {
-                          var intent = Intent(context, ChatActivity::class.java)
-                         startActivityForResult(intent, CHAT_ACTIVITY_REQUEST_CODE)
-                       }
-                       findDialog.dismiss()
-                       disposableSearchigRoom.clear()
-                       disposableDialogCount.clear()
-                       Log.d(TAG, it);
-                 })
+        if (disposableSearchigRoom.size() == 0) {
+            Log.d("DEBUG", "Start searching")
+            disposableSearchigRoom.add(model.startSearching()
+                ?.subscribeBy {
+                    if (it.equals("guest") || it.equals("owner")) {
+                        var intent = Intent(context, ChatActivity::class.java)
+                        startActivityForResult(intent, CHAT_ACTIVITY_REQUEST_CODE)
+                    }
+                    findDialog.dismiss()
+                    disposableSearchigRoom.clear()
+                    disposableDialogCount.clear()
+                    Log.d(TAG, it);
+                })
+        }
     }
 
 
