@@ -16,4 +16,6 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
     <string name="Chat">Анонимный чат</string>
+
+    <string name="Google"><a href="http://noface.best">Политика конфиденциальности</a></string>
 </resources>

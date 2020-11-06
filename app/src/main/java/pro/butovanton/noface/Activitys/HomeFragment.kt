@@ -278,24 +278,14 @@ class HomeFragment : Fragment(), FindDialogAction {
             (activity as MainActivity).showInterAdwert()
     }
 
-    override fun onResume() {
-        super.onResume()
-      //  disposableUsersCount =  Observable.interval(1, TimeUnit.SECONDS)
-      //      .subscribeOn(Schedulers.io())
-      //      .observeOn(AndroidSchedulers.mainThread())
-      //      .subscribe {
-      //      count += (10 -java.util.Random().nextInt(20))
-      //      textViewCount.text = "Число пользователей онлайн: " + count
-      //      }
-    }
-
     override fun onPause() {
         super.onPause()
       //  disposableUsersCount.dispose()
         if (disposableSearchigRoom.size() > 0 ) {
             onCancel()
         }
-        findDialog.dismiss()
+        if (findDialog!=null && findDialog.isResumed)
+           findDialog.dismiss()
     }
 
     fun setEnabled(enab: Boolean) {

@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     var consept = true
 
     private var mInterstitialAd: InterstitialAd? = null
-    private lateinit var firstDialog : AlertDialog;
+    private lateinit var firstDialog : FirstDialog;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,19 +60,9 @@ class MainActivity : AppCompatActivity() {
         val verText : TextView = navView.getHeaderView(0).findViewById(R.id.verText)
         verText.text = "Анонимный чат, версия " + ver
 
-            firstDialog =  AlertDialog.Builder(this)
-                .setTitle("Правила чата.")
-                .setMessage(getResources().getString(R.string.rules))
-                .setPositiveButton("Согласен", object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface?, which: Int) {
-                        consept = true
-                    }
-                })
-                .create()
-        firstDialog.setOnCancelListener {
-            finish()
-        }
-        firstDialog.show()
+        firstDialog =  FirstDialog.newInstance(Bundle())
+        firstDialog.isCancelable = false
+        firstDialog.show(supportFragmentManager, "firstfragment")
 
         MobileAds.initialize(application, "ca-app-pub-8158565231911074~2301325206")
         mInterstitilAdInit()
