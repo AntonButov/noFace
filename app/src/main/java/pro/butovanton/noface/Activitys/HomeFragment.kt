@@ -253,19 +253,19 @@ class HomeFragment : Fragment(), FindDialogAction {
         findDialog = FindDialog.newInstance(Bundle(),this, model.getIsAdvertDontShow())
         val fabChat = root.findViewById(R.id.buttonChat) as Button
         fabChat.setOnClickListener {
-            if (mAuth.isAuth()) {
+           // if (mAuth.isAuth()) {
                 findDialog.show((activity as MainActivity).getSupportFragmentManager(), "FindDialog")
 
-            }
-            else {
-                val toast: Toast =
-                    Toast.makeText(
-                        requireActivity().baseContext,
-                        "Нет подключения к интернету.",
-                        Toast.LENGTH_SHORT
-                    )
-                    toast.show()
-            }
+          //  }
+         //   else {
+          //      val toast: Toast =
+           //         Toast.makeText(
+          //              requireActivity().baseContext,
+          //              "Нет подключения к интернету.",
+          //              Toast.LENGTH_SHORT
+          //          )
+         //           toast.show()
+          //  }
         }
 
         textViewCountUsers = root.findViewById<TextView>(R.id.textViewCount)
