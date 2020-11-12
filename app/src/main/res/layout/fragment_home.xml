@@ -226,7 +226,7 @@
         android:layout_width="wrap_content"
         android:layout_height="18dp"
         android:layout_marginBottom="16dp"
-        android:text="Число пользователей онлайн: 2000"
+        android:text="Число пользователей онлайн: "
         app:layout_constraintBottom_toTopOf="@+id/buttonChat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

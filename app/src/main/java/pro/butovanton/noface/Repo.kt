@@ -13,6 +13,7 @@ import pro.butovanton.noface.Models.UserApp
 import pro.butovanton.noface.di.App.Companion.TAG
 import javax.inject.Singleton
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 //@Singleton
@@ -153,13 +154,15 @@ open class Repo(open var ref : DatabaseReference) {
     suspend fun getRoomsCount() : Long? = suspendCoroutine {continuation ->
         listenerRoomsList = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                Log.d(TAG, "listenerRoomsForCount")
+                Log.d(TAG, "listenerRoomsForCount = " + snapshot.childrenCount)
                 continuation.resume(snapshot.childrenCount)
                 ref.removeEventListener(listenerRoomsList)
             }
 
             override fun onCancelled(error: DatabaseError) {
-                continuation.resume(null)
+                Log.d(TAG, "listenerRoomsForCountError = " + error.message)
+                //continuation.resumeWithException( Exception(error.message) )
+                ref.removeEventListener(listenerRoomsList)
             }
         }
         ref.addValueEventListener(listenerRoomsList)

@@ -11,6 +11,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -25,6 +26,8 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.nav_header_main.*
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
@@ -62,6 +65,9 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     var disposableDialogCount = CompositeDisposable()
     var disposableSearchigRoom = CompositeDisposable()
+    lateinit var textViewCountUsers : TextView
+
+    lateinit var jobCountUsers : Job
    // lateinit var disposableUsersCount : Disposable
 
     val PEAPLE_COUNT = 2000
@@ -262,14 +268,24 @@ class HomeFragment : Fragment(), FindDialogAction {
             }
         }
 
-        lifecycleScope.launchWhenCreated {
+        textViewCountUsers = root.findViewById<TextView>(R.id.textViewCount)
+        jobCountUserStart()
+
+        return root
+    }
+
+    fun jobCountUserStart() {
+        jobCountUsers = lifecycleScope.launchWhenResumed {
             while (true) {
-               val users = model.getCountRooms()
-               textViewCount.text = "Число пользователей онлайн: " + users
-               delay(5000)
+                val users = model.getCountRooms()
+                textViewCountUsers.text = "Число пользователей онлайн: " + users
+                delay(5000)
             }
         }
-        return root
+    }
+
+    fun jobCountUserStop() {
+        jobCountUsers.cancel()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -280,6 +296,7 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     override fun onPause() {
         super.onPause()
+        jobCountUsers.cancel()
       //  disposableUsersCount.dispose()
         if (disposableSearchigRoom.size() > 0 ) {
             onCancel()
@@ -361,6 +378,7 @@ class HomeFragment : Fragment(), FindDialogAction {
     }
 
     override fun startSearching() {
+        jobCountUserStop()
         if (disposableSearchigRoom.size() == 0) {
             Log.d("DEBUG", "Start searching")
             disposableSearchigRoom.add(model.startSearching()
@@ -379,6 +397,7 @@ class HomeFragment : Fragment(), FindDialogAction {
 
 
     override fun onCancel() {
+        jobCountUserStart()
         model.onCancel()
         disposableSearchigRoom.clear()
         disposableDialogCount.clear()

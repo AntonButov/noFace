@@ -1,26 +1,23 @@
 package pro.butovanton.noface
 
 import android.app.Activity
-import android.app.Application
 import android.content.Context
 import android.util.Log
-import android.widget.Button
 import com.android.billingclient.api.*
-import io.reactivex.rxjava3.core.Single
 import pro.butovanton.noface.di.App
 import java.util.ArrayList
 
 class Billing(val app : Context) {
 
     var mySubs: List<Purchase>? = null
-    set(value) {
-        field = value
-        value?.let { logSubs(it) }
-    }
-    var subOnServer: SkuDetails? = null
+        set(value) {
+            field = value
+            value?.let { logSubs(it) }
+        }
+    var subsOnServer: List<SkuDetails>? = null
 
-    private lateinit var billingClient : BillingClient
-    private val mSkuId = "weekadvert"
+    private lateinit var billingClient: BillingClient
+    val skuList = mutableListOf("weekadvert", "monthadvert", "sixmonth", "year")
 
     private val purchaseUpdateListener =
         PurchasesUpdatedListener { billingResult, purchases ->
@@ -28,7 +25,7 @@ class Billing(val app : Context) {
             if (purchases != null) {
                 acknowledgePurchase(purchases.get(0))
                 consumePurchase(purchases.get(0))
-             mySubs = purchases
+                mySubs = purchases
             }
         }
 
@@ -40,8 +37,8 @@ class Billing(val app : Context) {
         getMySubs()
     }
 
-    fun isValidBilling() : Boolean{
-        return mySubs != null && subOnServer != null
+    fun isValidBilling(): Boolean {
+        return mySubs != null && subsOnServer != null
     }
 
     fun isAdvertDontShow(): Boolean {
@@ -66,6 +63,7 @@ class Billing(val app : Context) {
             }
         })
     }
+
     private fun queryPurchases(): List<Purchase> {
         val purchasesResult: Purchase.PurchasesResult =
             billingClient.queryPurchases(BillingClient.SkuType.SUBS)
@@ -91,49 +89,48 @@ class Billing(val app : Context) {
 
     private fun querySkuDetails() {
         val skuDetailsParamsBuilder = SkuDetailsParams.newBuilder()
-        val skuList: MutableList<String> = ArrayList()
-        skuList.add(mSkuId)
         skuDetailsParamsBuilder.setSkusList(skuList).setType(BillingClient.SkuType.SUBS)
         billingClient.querySkuDetailsAsync(
             skuDetailsParamsBuilder.build()
         ) { billingResult, subOnServerlist ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK && subOnServerlist != null) {
-                if (subOnServerlist.size > 0)
-                    subOnServer = subOnServerlist[0]
-                Log.d(App.TAG, "Подписки на сервере : " + subOnServerlist.size)
-                //       for (SkuDetails skuDetails : list) {
-                //            String sku = skuDetails.getSku();
-                //                String price = skuDetails.getPrice();
-                //           if ("premium_upgrade".equals(sku)) {
-                //                 premiumUpgradePrice = price;
-                //              } else if ("gas".equals(sku)) {
-                //                  gasPrice = price;
-                //              }
-                //              }
+                if (subOnServerlist.size > 0) {
+                    subsOnServer = subOnServerlist
+                    Log.d(App.TAG, "Подписки на сервере : " + subOnServerlist.size)
+                }
             }
         }
     }
 
+    private fun getSubById(id: Int): SkuDetails {
+        for (sub in subsOnServer!!)
+            if (sub.sku.equals(skuList[id]))
+                return sub
+        return subsOnServer!![0]
+    }
+
     private fun consumePurchase(purchase: Purchase) {
         val listener = ConsumeResponseListener { billingResult, purchaseToken ->
-                Log.d((App).TAG, "Преобретена подписка.")
-            }
+            Log.d((App).TAG, "Преобретена подписка.")
+        }
         val consumeParams = ConsumeParams.newBuilder()
             .setPurchaseToken(purchase.purchaseToken)
             .build()
         billingClient.consumeAsync(consumeParams, listener)
     }
 
-    fun launchBilling(activity : Activity) {
-        val billingFlowParams = BillingFlowParams.newBuilder()
-            .setSkuDetails(subOnServer!!)
+    fun launchBilling(activity: Activity, numSub: Int) {
+        val billingFlowParams = BillingFlowParams
+            .newBuilder()
+            .setSkuDetails(getSubById(numSub))
             .build()
+
         billingClient.launchBillingFlow(activity, billingFlowParams)
     }
 
-    private fun logSubs(mSubs : List<Purchase> ) {
-            for (mSub in mSubs)
-                Log.d((App).TAG, "Найдена подписка: " + mSub.sku)
+    private fun logSubs(mSubs: List<Purchase>) {
+        for (mSub in mSubs)
+            Log.d((App).TAG, "Найдена подписка: " + mSub.sku)
 
     }
 }

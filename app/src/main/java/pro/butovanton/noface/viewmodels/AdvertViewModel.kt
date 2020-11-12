@@ -17,8 +17,8 @@ class AdvertViewModel() : ViewModel() {
         return billing.isAdvertDontShow()
     }
 
-    fun launchBilling(activity: Activity) {
+    fun launchBilling(activity: Activity, numSub : Int) {
         if (billing.isValidBilling())
-            billing.launchBilling(activity)
+            billing.launchBilling(activity, numSub)
         }
     }

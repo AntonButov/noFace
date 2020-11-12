@@ -23,7 +23,7 @@ class RulesFragment : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_rules, container, false)
+        val root = inflater.inflate(R.layout.firsrt_dialog_view, container, false)
       return root
     }
 }
