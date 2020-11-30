@@ -276,11 +276,11 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     fun jobCountUserStart() {
         jobCountUsers = lifecycleScope.launchWhenResumed {
-            while (true) {
+      //      while (true) {
                 val users = model.getCountRooms()
                 textViewCountUsers.text = "Число пользователей онлайн: " + users
-                delay(5000)
-            }
+     //           delay(5000)
+      //      }
         }
     }
 

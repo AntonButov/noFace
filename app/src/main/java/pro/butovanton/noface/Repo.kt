@@ -105,10 +105,12 @@ open class Repo(open var ref : DatabaseReference) {
         finding = true
         return Single.create({  find ->
             getRoomsList()
-                .doOnNext { if (it.message1.end || it.message2.end)
-                                  deleteRoom(it.key!!)  }
-                .filter { myRoom == null &&
-                          it.empty &&
+                .doOnNext {
+                    if (it.message1.end || it.message2.end || it.empty == null)
+                                  deleteRoom(it.key!!)
+                }
+                .filter { myRoom == null && it.empty != null &&
+                        it?.empty!! &&
                           it.message1.end == false &&
                           it.message2.end == false &&
                           isUserValid(it.user1, it.userApp!!)}
@@ -134,6 +136,7 @@ open class Repo(open var ref : DatabaseReference) {
                     Log.d(TAG, "listenerRooms")
                     for (data in snapshot.children) {
                         var room = data.getValue(Room::class.java)
+                        room?.key = data.key
                         it.onNext(room)
                     }
                     it.onComplete()
