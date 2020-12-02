@@ -254,6 +254,7 @@ class HomeFragment : Fragment(), FindDialogAction {
         val fabChat = root.findViewById(R.id.buttonChat) as Button
         fabChat.setOnClickListener {
            // if (mAuth.isAuth()) {
+            if (!findDialog.isResumed)
                 findDialog.show((activity as MainActivity).getSupportFragmentManager(), "FindDialog")
 
           //  }

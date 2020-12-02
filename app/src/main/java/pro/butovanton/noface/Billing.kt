@@ -64,10 +64,10 @@ class Billing(val app : Context) {
         })
     }
 
-    private fun queryPurchases(): List<Purchase> {
+    private fun queryPurchases(): List<Purchase>? {
         val purchasesResult: Purchase.PurchasesResult =
             billingClient.queryPurchases(BillingClient.SkuType.SUBS)
-        return purchasesResult.purchasesList!!
+        return purchasesResult.purchasesList
     }
 
     private fun acknowledgePurchase(purchase: Purchase) {
