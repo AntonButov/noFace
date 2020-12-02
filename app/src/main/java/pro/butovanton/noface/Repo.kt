@@ -140,35 +140,33 @@ open class Repo(open var ref : DatabaseReference) {
                         it.onNext(room)
                     }
                     it.onComplete()
-                    ref.removeEventListener(listenerRoomsList)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     it.onError(Throwable("FireBase not loaded"))
-                    ref.removeEventListener(listenerRooms!!)
                 }
             }
-            ref.addValueEventListener(listenerRoomsList)
+            ref.addListenerForSingleValueEvent(listenerRoomsList)
 
         }
         )
     }
+
+
     
     suspend fun getRoomsCount() : Long? = suspendCoroutine {continuation ->
         listenerRoomsList = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.d(TAG, "listenerRoomsForCount = " + snapshot.childrenCount)
                 continuation.resume(snapshot.childrenCount)
-                ref.removeEventListener(listenerRoomsList)
             }
 
             override fun onCancelled(error: DatabaseError) {
                 Log.d(TAG, "listenerRoomsForCountError = " + error.message)
-                //continuation.resumeWithException( Exception(error.message) )
-                ref.removeEventListener(listenerRoomsList)
+                continuation.resume(99)
             }
         }
-        ref.addValueEventListener(listenerRoomsList)
+        ref.addListenerForSingleValueEvent(listenerRoomsList)
 
     }
  
