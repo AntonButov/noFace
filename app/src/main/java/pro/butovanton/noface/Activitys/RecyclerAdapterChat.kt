@@ -38,7 +38,6 @@ class RecyclerAdapterChat(val messages: MutableList<Massage>) :
                 val sdf = SimpleDateFormat("HH:mm:ss")
                 timeMy.text = sdf.format(messages[position].time)
                 textMy.visibility = View.VISIBLE
-                timeMy.visibility = View.VISIBLE
                 textApp.visibility = View.GONE
                 timeApp.visibility = View.GONE
             }
@@ -47,7 +46,7 @@ class RecyclerAdapterChat(val messages: MutableList<Massage>) :
                 val sdf = SimpleDateFormat("HH:mm:ss")
                 timeApp.text = sdf.format(messages[position].time)
                 textApp.visibility = View.VISIBLE
-                timeApp.visibility = View.VISIBLE
+              //  timeApp.visibility = View.VISIBLE
                 textMy.visibility = View.GONE
                 timeMy.visibility = View.GONE
             }

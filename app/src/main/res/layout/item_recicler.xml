@@ -25,7 +25,7 @@
                 android:id="@+id/textMessageApp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/corner_textview"
+                android:background="@drawable/corner_textview_my"
                 android:padding="10dp"
                 android:layout_margin="5dp"
                 android:text="TextView"
@@ -39,6 +39,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:text="11:20"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textMessageMy"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -50,6 +51,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:text="11:20"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textMessageApp"
                 app:layout_constraintTop_toTopOf="parent" />

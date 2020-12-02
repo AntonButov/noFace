@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgraund"
+    android:background="@color/white"
     tools:context=".Activitys.ChatActivity">
 
 
@@ -17,20 +17,19 @@
 
         <ImageView
             android:id="@+id/imogiButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/imogi"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/emojicons"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewEditmessage"
-             />
+            app:layout_constraintTop_toTopOf="@+id/editText" />
 
         <ImageView
             android:id="@+id/sendButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toTopOf="@+id/emojicons"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/editText"
             app:srcCompat="@drawable/send" />
@@ -55,7 +54,6 @@
 
         <EditText
             android:focusable="false"
-
             android:id="@+id/editText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -100,7 +98,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/textViewEditmessage"
+            android:background="@color/colorPrimaryDarkWhite"
+            app:layout_constraintBottom_toTopOf="@+id/editText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/appBarLayout2" />
