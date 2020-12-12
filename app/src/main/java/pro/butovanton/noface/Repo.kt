@@ -75,7 +75,7 @@ open class Repo(open var ref : DatabaseReference) {
         muserApp = userApp
         return Single.create {findRoom ->
             if (finding == false)
-            findFreeRoom2()
+            findFreeRoom2(ValidaterUser(muser, muserApp))
                 .subscribeBy {
                     if (it.equals("guest"))
                             findRoom.onSuccess(it)
@@ -100,7 +100,7 @@ open class Repo(open var ref : DatabaseReference) {
         }
     }
 
-    private fun findFreeRoom2() : Single<String> {
+    private fun findFreeRoom2(validaterUser: ValidaterUser) : Single<String> {
         Log.d(TAG, "Finding")
         finding = true
         return Single.create({  find ->
@@ -113,7 +113,7 @@ open class Repo(open var ref : DatabaseReference) {
                         it?.empty!! &&
                           it.message1.end == false &&
                           it.message2.end == false &&
-                          isUserValid(it.user1, it.userApp!!)}
+                          validaterUser.isUserValid(it.user1, it.userApp!!)}
                 .take(1)
                 .subscribeBy({} , {
                    if (myRoom != null) {
@@ -163,30 +163,13 @@ open class Repo(open var ref : DatabaseReference) {
 
             override fun onCancelled(error: DatabaseError) {
                 Log.d(TAG, "listenerRoomsForCountError = " + error.message)
-                continuation.resume(99)
+                continuation.resumeWithException(exception = Throwable(error.message))
             }
         }
         ref.addListenerForSingleValueEvent(listenerRoomsList)
 
     }
  
-    private fun isUserValid(user: User, userApp: UserApp) : Boolean {
-    return  isUserValidGender(user, userApp) &&
-            isUserValidAge(user, userApp)
-    }
-
-    private fun isUserValidGender(user: User, userApp: UserApp) : Boolean{
-        return userApp.gender == muser.gender &&
-                muserApp.gender == user.gender
-    }
-
-    private fun isUserValidAge(user: User, userApp: UserApp) : Boolean {
-    var res : Boolean
-    if (muser.gender == 2) res = true
-    else res = muserApp.age[user.age] && userApp.age[muser.age]
-    return res
-    }
-
     private fun setNewRoom() : Single<Boolean> {
     Log.d(TAG, "SetNewRoom")
     settingRoom = true

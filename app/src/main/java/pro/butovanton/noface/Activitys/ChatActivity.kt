@@ -75,10 +75,10 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
                {
                    it.my = false
                    if (it.edit)
-                       textViewEditmessage.visibility = View.VISIBLE
+                       textViewEditmessage.text= " Вводит сообщение"
                    else {
                        if (!it.text.equals("")) {
-                           textViewEditmessage.visibility = View.INVISIBLE
+                           textViewEditmessage.text = ""
                            adapterChat.messages.add(0, it)
                            adapterChat.notifyDataSetChanged()
                            notify(baseContext)

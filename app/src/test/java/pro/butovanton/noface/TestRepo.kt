@@ -19,12 +19,13 @@ import javax.inject.Inject
  */
 class TestRepo {
 
-var repo = App.appcomponent.getRepoTest()
+    var repo = App.appcomponent.getRepoTest()
 
     @Test
-    fun getCountRoomsTest() = runBlocking{
-      val countRooms = repo.getRoomsCount()
+    fun getCountRoomsTest() = runBlocking {
+        val countRooms = repo.getRoomsCount()
         assertEquals(countRooms, 1)
     }
+}
 
 
