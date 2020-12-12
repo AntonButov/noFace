@@ -1,6 +1,5 @@
 package pro.butovanton.noface.Activitys
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -8,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -26,11 +24,14 @@ import pro.butovanton.noface.di.App
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    var consept = true
+    val INTERSTILIAN_SPLASH = "ca-app-pub-8158565231911074/3826954398"
+    val INTERSTILIAN_CHAT =   "ca-app-pub-8158565231911074/5118511494"
 
-    private var mInterstitialAd: InterstitialAd? = null
-    private lateinit var firstDialog : FirstDialog;
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private var mInterstitialAdSplash: InterstitialAd? = null
+    private var mInterstitialAdChat: InterstitialAd? = null
+  //  private lateinit var firstDialog : FirstDialog;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,38 +56,44 @@ class MainActivity : AppCompatActivity() {
         val verText : TextView = navView.getHeaderView(0).findViewById(R.id.verText)
         verText.text = "Анонимный чат, версия " + ver
 
-        firstDialog =  FirstDialog.newInstance(Bundle())
-        firstDialog.isCancelable = false
-        firstDialog.show(supportFragmentManager, "firstfragment")
+ //       firstDialog =  FirstDialog.newInstance(Bundle())
+ //       firstDialog.isCancelable = false
+  //      firstDialog.show(supportFragmentManager, "firstfragment")
 
-        MobileAds.initialize(application, "ca-app-pub-8158565231911074~2301325206")
-        mInterstitilAdInit()
+        mInterstitilAdInitSplash()
+        mInterstitilAdInitChat()
+        val billing = (App).appcomponent.getBilling()
+        if (!billing.isAdvertDontShow())
+            showInterAdwertSplash()
 
         val intentMService = Intent( this, MService::class.java)
         startService(intentMService)
     }
 
-    fun showInterAdwert() {
-        mInterstitialAd!!.loadAd(AdRequest.Builder().build())
+    private fun showInterAdwertSplash() {
+        mInterstitialAdSplash!!.loadAd(AdRequest.Builder().build())
     }
 
-    fun mInterstitilAdInit() {
-        mInterstitialAd = InterstitialAd(application)
-           mInterstitialAd!!.adUnitId = "ca-app-pub-8158565231911074/5118511494"
+    fun showInterAdwertChat() {
+        mInterstitialAdChat!!.loadAd(AdRequest.Builder().build())
+    }
+
+    private fun mInterstitilAdInitSplash() {
+        mInterstitialAdSplash = InterstitialAd(application)
+        mInterstitialAdSplash!!.adUnitId = INTERSTILIAN_SPLASH
         //mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712" // test
 
-        mInterstitialAd!!.adListener = object: AdListener() {
+        mInterstitialAdSplash!!.adListener = object : AdListener() {
             override fun onAdLoaded() {
                 Log.d((App).TAG, "AdLoad ")
 
-                if (mInterstitialAd != null
-                    && mInterstitialAd!!.isLoaded()
-                )
-                {
-                    mInterstitialAd!!.show();
-                    Log.d((App).TAG, " Ad show" )
+                if (mInterstitialAdSplash != null
+                    && mInterstitialAdSplash!!.isLoaded()
+                ) {
+                    mInterstitialAdSplash!!.show();
+                    Log.d((App).TAG, " Ad show")
                 } else {
-                    Log.d((App).TAG, " Ad not loaded" )
+                    Log.d((App).TAG, " Ad not loaded")
                 }
 
             }
@@ -112,6 +119,50 @@ class MainActivity : AppCompatActivity() {
             override fun onAdClosed() {
                 // Code to be executed when the interstitial ad is closed.
             }
+        }
+    }
+    private fun mInterstitilAdInitChat() {
+        mInterstitialAdChat = InterstitialAd(application)
+        mInterstitialAdChat!!.adUnitId = INTERSTILIAN_CHAT
+        //mInterstitialAd!!.adUnitId = "ca-app-pub-3940256099942544/1033173712" // test
+
+            mInterstitialAdChat!!.adListener = object: AdListener() {
+                override fun onAdLoaded() {
+                    Log.d((App).TAG, "AdLoad ")
+
+                    if (mInterstitialAdChat != null
+                        && mInterstitialAdChat!!.isLoaded()
+                    )
+                    {
+                        mInterstitialAdChat!!.show();
+                        Log.d((App).TAG, " Ad show" )
+                    } else {
+                        Log.d((App).TAG, " Ad not loaded" )
+                    }
+
+                }
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    println(adError)
+                    Log.d((App).TAG, "AdError " + adError.message)
+                    // Code to be executed when an ad request fails.
+                }
+
+                override fun onAdOpened() {
+                    // Code to be executed when the ad is displayed.
+                }
+
+                override fun onAdClicked() {
+                    // Code to be executed when the user clicks on an ad.
+                }
+
+                override fun onAdLeftApplication() {
+                    // Code to be executed when the user has left the app.
+                }
+
+                override fun onAdClosed() {
+                    // Code to be executed when the interstitial ad is closed.
+                }
         }
     }
 

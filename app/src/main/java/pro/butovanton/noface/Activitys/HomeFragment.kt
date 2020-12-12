@@ -1,7 +1,5 @@
 package pro.butovanton.noface.Activitys
 
-import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -12,30 +10,18 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.nav_header_main.*
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import pro.butovanton.noface.R
 import pro.butovanton.noface.di.App
 import pro.butovanton.noface.di.App.Companion.TAG
 import pro.butovanton.noface.viewmodels.MainViewModel
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 class HomeFragment : Fragment(), FindDialogAction {
@@ -295,7 +281,7 @@ class HomeFragment : Fragment(), FindDialogAction {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CHAT_ACTIVITY_REQUEST_CODE && !model.getIsAdvertDontShow())
-            (activity as MainActivity).showInterAdwert()
+            (activity as MainActivity).showInterAdwertChat()
     }
 
     override fun onPause() {

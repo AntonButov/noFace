@@ -63,9 +63,9 @@ class ChatActivity : AppCompatActivity(),  EmojiconGridFragment.OnEmojiconClicke
 
        d = model.connectToRoom()
            .subscribeBy({
-               Log.d((App).TAG, "оибка connect to Room")
+               Log.d((App).TAG, "ошибка connect to Room")
            }, {
-               textViewEditmessage.text = "Собеседник покинул чат ..."
+               textViewEditmessage.text = " Собеседник покинул чат ..."
                // Нужно прописать выход из чата.
 
                d.dispose()

@@ -3,6 +3,7 @@ package pro.butovanton.noface.di
 import android.app.Application
 import android.content.Intent
 import android.util.Log
+import com.google.android.gms.ads.MobileAds
 import pro.butovanton.noface.MService
 import pro.butovanton.noface.MyFirebaseMessagingService
 
@@ -31,6 +32,7 @@ class App : Application() {
 
         app = this
         appcomponent.getBilling()
+        MobileAds.initialize(this, "ca-app-pub-8158565231911074~2301325206")
     }
 
     override fun onTerminate() {
