@@ -42,12 +42,13 @@ class Splash : AppCompatActivity() {
         }
 
     lifecycleScope.launchWhenResumed {
-        delay(3000)
+        delay(5000)
         buttonAcept.visibility = View.VISIBLE
     }
         buttonAcept.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
              startActivity(intent)
+        finish()
         }
     }
 

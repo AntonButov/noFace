@@ -21,7 +21,7 @@
             android:layout_height="40dp"
             android:background="@drawable/imogi"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/editText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/editText" />
 
