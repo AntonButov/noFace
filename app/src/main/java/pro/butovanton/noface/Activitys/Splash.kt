@@ -46,8 +46,9 @@ class Splash : AppCompatActivity() {
         buttonAcept.visibility = View.VISIBLE
     }
         buttonAcept.setOnClickListener {
-            val intent = Intent(applicationContext, MainActivity::class.java)
-             startActivity(intent)
+        it.visibility = View.GONE;
+        val intent = Intent(applicationContext, MainActivity::class.java)
+        startActivity(intent)
         finish()
         }
     }
