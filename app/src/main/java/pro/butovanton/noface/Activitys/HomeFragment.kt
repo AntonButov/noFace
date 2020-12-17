@@ -63,7 +63,7 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     private val model: MainViewModel by viewModels()
 
-    private var mAuth = (App).appcomponent.getAuth()
+    private lateinit var fabChat: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -236,10 +236,12 @@ class HomeFragment : Fragment(), FindDialogAction {
         performClickAge2()
         bAnyGender1.performClick()
 
+
         findDialog = FindDialog.newInstance(Bundle(),this, model.getIsAdvertDontShow())
-        val fabChat = root.findViewById(R.id.buttonChat) as Button
+        fabChat = root.findViewById(R.id.buttonChat) as Button
         fabChat.setOnClickListener {
            // if (mAuth.isAuth()) {
+            it.visibility = View.GONE
             if (!findDialog.isResumed)
                 findDialog.show((activity as MainActivity).getSupportFragmentManager(), "FindDialog")
 
@@ -280,8 +282,10 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CHAT_ACTIVITY_REQUEST_CODE && !model.getIsAdvertDontShow())
+        if (requestCode == CHAT_ACTIVITY_REQUEST_CODE && !model.getIsAdvertDontShow()) {
             (activity as MainActivity).showInterAdwertChat()
+            fabChat.visibility = View.VISIBLE
+        }
     }
 
     override fun onPause() {
