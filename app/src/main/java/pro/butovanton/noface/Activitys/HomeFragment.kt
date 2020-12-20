@@ -288,6 +288,11 @@ class HomeFragment : Fragment(), FindDialogAction {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        fabChat.visibility = View.VISIBLE
+    }
+
     override fun onPause() {
         super.onPause()
         jobCountUsers.cancel()
@@ -395,6 +400,7 @@ class HomeFragment : Fragment(), FindDialogAction {
         model.onCancel()
         disposableSearchigRoom.clear()
         disposableDialogCount.clear()
+        fabChat.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {
