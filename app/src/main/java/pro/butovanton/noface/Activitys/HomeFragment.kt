@@ -290,7 +290,7 @@ class HomeFragment : Fragment(), FindDialogAction {
 
     override fun onStart() {
         super.onStart()
-        fabChat.visibility = View.VISIBLE
+        fabChat.visibility = VISIBLE
     }
 
     override fun onPause() {
