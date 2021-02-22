@@ -300,8 +300,10 @@ class HomeFragment : Fragment(), FindDialogAction {
         if (disposableSearchigRoom.size() > 0 ) {
             onCancel()
         }
-        if (findDialog!=null && findDialog.isResumed)
-           findDialog.dismiss()
+        if (findDialog!=null && findDialog.isResumed) {
+            findDialog.dismiss()
+            fabChat.visibility = VISIBLE
+        }
     }
 
     fun setEnabled(enab: Boolean) {
