@@ -11,7 +11,6 @@ import pro.butovanton.noface.Models.Room
 import pro.butovanton.noface.Models.User
 import pro.butovanton.noface.Models.UserApp
 import pro.butovanton.noface.di.App.Companion.TAG
-import javax.inject.Singleton
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -105,15 +104,11 @@ open class Repo(open var ref : DatabaseReference) {
         finding = true
         return Single.create({  find ->
             getRoomsList()
-                .doOnNext {
-                    if (it.message1.end || it.message2.end || it.empty == null)
-                                  deleteRoom(it.key!!)
-                }
-                .filter { myRoom == null && it.empty != null &&
+                .filter {
+                        !deleteErrorRoom(it) &&
+                        myRoom == null
                         it?.empty!! &&
-                          it.message1.end == false &&
-                          it.message2.end == false &&
-                          validaterUser.isUserValid(it.user1, it.userApp!!)}
+                        validaterUser.isUserValid(it.user1, it.userApp!!)}
                 .take(1)
                 .subscribeBy({} , {
                    if (myRoom != null) {
@@ -129,15 +124,25 @@ open class Repo(open var ref : DatabaseReference) {
              })
     }
 
+    private fun deleteErrorRoom(room: Room): Boolean {
+        if (room.message1.end || room.message2.end) {
+            deleteRoom(room.key!!)
+            return true
+        }
+    return false
+    }
+
     private fun getRoomsList() : Observable<Room> {
         return Observable.create ({
             listenerRoomsList = object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     Log.d(TAG, "listenerRooms")
                     for (data in snapshot.children) {
-                        var room = data.getValue(Room::class.java)
+                    if (!isErrorKey(data)) {
+                        val room = data.getValue(Room::class.java)
                         room?.key = data.key
                         it.onNext(room)
+                    }
                     }
                     it.onComplete()
                 }
@@ -152,6 +157,18 @@ open class Repo(open var ref : DatabaseReference) {
         )
     }
 
+    private fun isErrorKey(data: DataSnapshot): Boolean {
+        if (data.child("key").getValue() == null ||
+            data.child("empty").getValue() == null ||
+            data.child("message1").getValue() == null ||
+            data.child("message2").getValue() == null ||
+            data.child("user2").getValue() == null ||
+            data.child("userApp").getValue() == null) {
+                deleteRoom(key = data.key as String)
+            return true
+        }
+        return false
+    }
 
     
     suspend fun getRoomsCount() : Long? = suspendCoroutine {continuation ->
